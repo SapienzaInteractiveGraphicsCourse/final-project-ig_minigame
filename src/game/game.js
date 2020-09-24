@@ -464,7 +464,7 @@ var createFirstScenario = function () {
     }
 
 
-    var model_root_dir = '../../models/tanks/basicTank/';
+    var model_root_dir = 'models/tanks/basicTank/';
     var babylon_file_name = 'tank.babylon';
 
 
