@@ -48,11 +48,11 @@ The player will face an opponent team of blue tanks that have the only purpose o
 
 
 
-   
 ## Play the game
 Go to this link to play the game
 
 https://sapienzainteractivegraphicscourse.github.io/final-project-ig_minigame/
+
 
     
     
