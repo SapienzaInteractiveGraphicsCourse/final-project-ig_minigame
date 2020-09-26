@@ -9,6 +9,18 @@ var scene;
 
 
 
+
+
+//Global variable that is set when the "free debugging camera" is activated.
+var isSceneFreezed = false;
+
+
+
+
+
+
+
+
 //Boolean global variable stating whether the player has won the game or not
 var winningCondition = false;
 
@@ -21,7 +33,7 @@ var HARD_POINT_WINNING_CONDITION = 10;
 
 
 //Set a respawn time for the tanks
-var TANK_RESPAWN_TIME = 2000;
+var TANK_RESPAWN_TIME = 5000;
 
 
 
@@ -50,7 +62,7 @@ var LOOT_BOX_RESPAWN_TIME = 5000;
 
 
 //The size of the loot boxes.
-var LOOT_BOX_SIZE = 15;
+var LOOT_BOX_SIZE = 12;
 
 
 
@@ -84,7 +96,7 @@ var managing_redTanksArray = false;
 
 //These global variables control buttons in the main menu
 var daytime;
-var soundEnabled;
+var soundEnabled = true;
 
 var globalCloneTankId = 0;
 var difficulty = 'easy';
@@ -97,6 +109,11 @@ Game.scenes = [];
 //First level.
 Game.activeScene = MAIN_MENU_SCENE_VALUE;
 
+
+//Set the rendering speed of the game
+Game.renderingSpeed = 350;
+
+
 document.addEventListener('DOMContentLoaded', startGame);
 
 
@@ -106,6 +123,8 @@ document.addEventListener('DOMContentLoaded', startGame);
 
 function startGame() {
     canvas = document.getElementById('renderCanvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     //Be aware of the fact that the canvas can be resized.
 
@@ -136,13 +155,13 @@ var startDeathMenu = function () {
 
 
     var scene = Game.scenes[Game.activeScene];
-    engine.runRenderLoop(function () {
-        scene.render();
-    })
+    scene.assetsManager.load();
 }
 
 
 var startWinMenu = function(){
+
+    Game.activeScene = DEATH_MENU_SCENE_VALUE;
     Game.scenes[Game.activeScene] = createDeathMenu(engine);
 
 
@@ -203,13 +222,17 @@ var checkWinCondition = function(scene){
 
 
 var startMenu = function () {
+    Game.activeScene = MAIN_MENU_SCENE_VALUE;
     Game.scenes[Game.activeScene] = createMainMenu(engine);
 
 
     var scene = Game.scenes[Game.activeScene];
-    engine.runRenderLoop(function () {
-        scene.render();
-    });
+
+
+
+    //Start the assetsManager to load the tanks
+    scene.assetsManager.load();
+
 }
 
 
@@ -224,8 +247,9 @@ var startMenu = function () {
 var startFirstScene = function () {
 
 
-    //We reset the global clone tank id.
-    globalCloneTankId = 0;
+
+
+    Game.activeScene = FIRST_LEVEL_SCENE_VALUE;
 
     //Creat the first level in this very simple manner.
     Game.scenes[Game.activeScene] = createFirstScenario();
@@ -246,27 +270,34 @@ var startFirstScene = function () {
 
     scene.toRender = function () {
 
+        //Slow down the game
+        setTimeout(function(){
+            //Enable tank movement when rendering the scene.
+            var heroTank = scene.heroTank;
+            
+            //If the scene is freezed for debugging purposes, the tanks must not move.
+            if(!isSceneFreezed){
+                startTank(scene, heroTank);
 
-        //Enable tank movement when rendering the scene.
-        var heroTank = scene.heroTank;
-        startTank(scene, heroTank);
 
+                //Start the other teams tanks.
+                startBlueTeamTanks(scene);
 
-        //Start the other teams tanks.
-        startBlueTeamTanks(scene);
+                registerLootBoxTriggers(scene);
 
-        registerLootBoxTriggers(scene);
+                registerOutsideOfMapTrigger(scene);
 
-        registerOutsideOfMapTrigger(scene);
+                //Check whether the player has won the game or not
+                checkWinCondition(scene);
+            }
+
+        },Game.renderingSpeed);
 
         updateInGameGUI(scene);
 
 
-        //Check whether the player has won the game or not
-        checkWinCondition(scene);
 
-
-
+      
         scene.render();
 
     }
@@ -326,13 +357,13 @@ var createInGameGUI = function(scene){
     var healthText = new BABYLON.GUI.TextBlock();
     healthText.text = "Health: ".concat("0");
     healthText.height = "30px";
-    healthText.color = "white";
+    healthText.color = "pink";
 
     //Define the title container and some properties.
     var machineGunText = new BABYLON.GUI.TextBlock();
     machineGunText.text = "Machine gun bullets: ".concat("0");
     machineGunText.height = "30px";
-    machineGunText.color = "white";
+    machineGunText.color = "green";
     
 
 
@@ -340,7 +371,7 @@ var createInGameGUI = function(scene){
     var cannonText = new BABYLON.GUI.TextBlock();
     cannonText.text = "Cannon bullets: ".concat("0");
     cannonText.height = "30px";
-    cannonText.color = "white";
+    cannonText.color = "orange";
     
 
 
@@ -348,7 +379,7 @@ var createInGameGUI = function(scene){
     var pointText = new BABYLON.GUI.TextBlock();
     pointText.text = "Points: ".concat("0");
     pointText.height = "30px";
-    pointText.color = "white";
+    pointText.color = "yellow";
 
     cannonText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
 	cannonText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
@@ -399,7 +430,6 @@ var createFirstScenario = function () {
 
 
 
-
     scene = new BABYLON.Scene(engine);
     scene.enablePhysics();
 
@@ -428,7 +458,7 @@ var createFirstScenario = function () {
         'updatable': false
     };
 
-    var groundTextureUrl = "texture/sand.jpg";
+    var groundTextureUrl = "texture/groundGrid.jpg";
 
     var ground = createGround(scene, groundOptions, groundTextureUrl, true);
     scene.ground = ground;
@@ -445,6 +475,8 @@ var createFirstScenario = function () {
             'diffuseColor': new BABYLON.Color3.White
         },
     ];
+
+    //scene.ambientColor = new BABYLON.Color3(0.3,0.76,0.3);
 
 
 
@@ -508,7 +540,6 @@ var createFirstScenario = function () {
 
 
 
-
 };
 
 
@@ -519,8 +550,8 @@ window.addEventListener('resize', function () {
   
  
     //Executing these lines will make the canvas to cover 100% of the screen.
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     if (engine)
         engine.resize();
 

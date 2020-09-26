@@ -21,114 +21,176 @@
  */
 var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosition) {
 
-
+    
     //Get the current activated scene by the global variable Game
     var scene = Game.scenes[Game.activeScene];
 
 
     var root = scene.getMeshByName('Box');
 
-    var tank = new Tank(newMeshes, root, scene, -1, 4, newMeshes[0].name, 'red', false);
-
-
-    var spawnPosition = new BABYLON.Vector3(0.0, 1.6, -900.52);
-    //Adjust the spwaning position of the hero tank.
-    tank.setSpawnPoint(spawnPosition);
-    tank.teleportSpawn();
-
-
-    /**Add the heroTank to the scene in order to have it available. With 
-     * scene.heroTank we store the Object not the mesh.
-    */
-    scene.heroTank = tank;
-
-
-
-    /*
-    for(var i =0 ; i<scene.meshes.length; ++i){
-        console.log(scene.meshes[i].name);
-    }
-    */
-
     
 
-    /**
-     * Spawn the opponent tanks (blue team tanks) on the other side of the map. The 
-     * number of tanks is determined by the difficulty of the game. An "easy" game will
-     * spawn just two blue tanks, whereas a "hard" game will spawn 4 tanks. 
-    */
-    if (difficulty == 'easy') {
-        for (var i = 0; i < MAX_NUM_TANK_EASY; ++i) {
+    if(Game.activeScene == FIRST_LEVEL_SCENE_VALUE){
+        var tank = new Tank(newMeshes, root, scene, -1, 4, newMeshes[0].name, 'red', false);
 
 
-            //Clone a tank (from the hero tank) and istantiate a Tank object that represents the blue team tank.
-            var clone = DoClone(tank.root, null, i + 1);
-            var blueTank = new Tank(clone, clone, scene, i + 1, 4, 'clone_'.concat((i + 1).toString()), 'blue', true);
+        var spawnPosition = new BABYLON.Vector3(0.0, 1.8, -900.52);
+        //Adjust the spwaning position of the hero tank.
+        tank.setSpawnPoint(spawnPosition);
+        tank.teleportSpawn();
 
 
-            //Spawn the opponent tanks in a row.
+        /**Add the heroTank to the scene in order to have it available. With 
+         * scene.heroTank we store the Object not the mesh.
+        */
+        scene.heroTank = tank;
 
-            
-            var xPosition = 100 * Math.pow(-1, i) + 100 * i;
-            var spawnPosition = new BABYLON.Vector3(xPosition,1.6,900.52);
-            
 
-            blueTank.setSpawnPoint(spawnPosition);
-            blueTank.teleportSpawn();
 
+        /*
+        for(var i =0 ; i<scene.meshes.length; ++i){
+            console.log(scene.meshes[i].name);
+        }
+        */
+
+        
+
+        /**
+         * Spawn the opponent tanks (blue team tanks) on the other side of the map. The 
+         * number of tanks is determined by the difficulty of the game. An "easy" game will
+         * spawn just two blue tanks, whereas a "hard" game will spawn 4 tanks. 
+        */
+        if (difficulty == 'easy') {
+            for (var i = 0; i < MAX_NUM_TANK_EASY; ++i) {
+
+
+                //Clone a tank (from the hero tank) and istantiate a Tank object that represents the blue team tank.
+                var clone = DoClone(tank.root, null, i + 1);
+                var blueTank = new Tank(clone, clone, scene, i + 1, 4, 'clone_'.concat((i + 1).toString()), 'blue', true);
+
+
+                //Spawn the opponent tanks in a row.
+
+                
+                var xPosition = 100 * Math.pow(-1, i) + 100 * i;
+                var spawnPosition = new BABYLON.Vector3(xPosition,1.8,900.52);
+                
+
+                blueTank.setSpawnPoint(spawnPosition);
+                blueTank.teleportSpawn();
+
+
+
+            }
 
 
         }
 
+        else {
 
-    }
+            for (var i = 0; i < MAX_NUM_TANK_HARD; ++i) {
 
-    else {
-
-        for (var i = 0; i < MAX_NUM_TANK_HARD; ++i) {
-
-            //Clone a tank (from the hero tank) and istantiate a Tank object that represents the blue team tank.
-            var clone = DoClone(tank.root, null, i + 1);
-            var blueTank = new Tank(clone, clone, scene, i + 1, 4, 'clone_'.concat((i + 1).toString()), 'blue', true);
+                //Clone a tank (from the hero tank) and istantiate a Tank object that represents the blue team tank.
+                var clone = DoClone(tank.root, null, i + 1);
+                var blueTank = new Tank(clone, clone, scene, i + 1, 4, 'clone_'.concat((i + 1).toString()), 'blue', true);
 
 
 
 
-            var xPosition = 100 * Math.pow(-1, i) + 100 * i;
-            var spawnPosition = new BABYLON.Vector3(xPosition,1.6,900.52);
-            
+                var xPosition = 100 * Math.pow(-1, i) + 100 * i;
+                var spawnPosition = new BABYLON.Vector3(xPosition,1.8,900.52);
+                
 
-            blueTank.setSpawnPoint(spawnPosition);
-            blueTank.teleportSpawn();
+                blueTank.setSpawnPoint(spawnPosition);
+                blueTank.teleportSpawn();
+
+            }
 
         }
 
+
+
+        //Define the parameters of the hero tank follow camera (TPS like camera) and create the FollowCameraObject.
+        var heroTankFollowCamera = {
+            'radius': 70,
+            'heightOffset': 25,
+            'rotationOffset': 0,
+            'cameraAcceleration': 0.5,
+            'maxCameraSpeed': 50
+        };
+        var heroTankFollowCamera = createFollowCamera(scene, root, heroTankFollowCamera, "heroTankFollowCamera");
+        if (heroTankFollowCamera) {
+            scene.heroTankFollowCamera = heroTankFollowCamera;
+            scene.activeCamera = heroTankFollowCamera;
+
+        }
+        else {
+            alert("Error in creating the follow camera with name heroTankFollowCamera");
+        }
+
+
+
+        //Enable the Tank crosshair
+        loadTankCrosshair(scene);
+    }
+
+
+    //Set up the spawn points for the tank main menu.
+    else if(Game.activeScene == MAIN_MENU_SCENE_VALUE){
+        var tank = new Tank(newMeshes, root, scene, -1, 1, newMeshes[0].name, 'red', false);
+
+        var spawnPosition = new BABYLON.Vector3(10.0, 1.0, 13.0);
+
+        var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0,1,0),degrees_to_radians(45));
+        tank.root.rotationQuaternion = quaternion;
+
+        //Adjust the spwaning position of the tanks.
+        tank.setSpawnPoint(spawnPosition);
+        tank.teleportSpawn();
+        
+   
+
+        var clone = DoClone(tank.root,null,1);
+
+        var clonedTank = new Tank(clone,clone,scene,1,1,"clone_1",'blue',true);
+
+        var clonedSpawnPosition = new BABYLON.Vector3(-10.0,1.0,13.0);
+        
+        var clonedQuaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0,1,0),degrees_to_radians(315));
+        clonedTank.root.rotationQuaternion = clonedQuaternion;
+        //Adjust the spwaning position of the tanks.
+        clonedTank.setSpawnPoint(clonedSpawnPosition);
+        clonedTank.teleportSpawn();
+      
     }
 
 
 
-    //Define the parameters of the hero tank follow camera (TPS like camera) and create the FollowCameraObject.
-    var heroTankFollowCamera = {
-        'radius': 70,
-        'heightOffset': 25,
-        'rotationOffset': 0,
-        'cameraAcceleration': 0.5,
-        'maxCameraSpeed': 50
-    };
-    var heroTankFollowCamera = createFollowCamera(scene, root, heroTankFollowCamera, "heroTankFollowCamera");
-    if (heroTankFollowCamera) {
-        scene.heroTankFollowCamera = heroTankFollowCamera;
-        scene.activeCamera = heroTankFollowCamera;
+    else if(Game.activeScene == DEATH_MENU_SCENE_VALUE){
+        var tank = new Tank(newMeshes, root, scene, -1, 1, newMeshes[0].name, 'blue', false);
 
+        var spawnPosition = new BABYLON.Vector3(10.0, 1.0, 13.0);
+
+        var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0,1,0),degrees_to_radians(45));
+        tank.root.rotationQuaternion = quaternion;
+
+        //Adjust the spwaning position of the tanks.
+        tank.setSpawnPoint(spawnPosition);
+        tank.teleportSpawn();
+        
+
+        var clone = DoClone(tank.root,null,1);
+
+        var clonedTank = new Tank(clone,clone,scene,1,1,"clone_1",'blue',true);
+
+        var clonedSpawnPosition = new BABYLON.Vector3(-10.0,1.0,13.0);
+        
+        var clonedQuaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0,1,0),degrees_to_radians(315));
+        clonedTank.root.rotationQuaternion = clonedQuaternion;
+        //Adjust the spwaning position of the tanks.
+        clonedTank.setSpawnPoint(clonedSpawnPosition);
+        clonedTank.teleportSpawn();
     }
-    else {
-        alert("Error in creating the follow camera with name heroTankFollowCamera");
-    }
-
-
-
-    //Enable the Tank crosshair
-    //loadTankCrosshair(scene);
 
 
     return newMeshes;
@@ -159,8 +221,8 @@ var loadTankCrosshair = function (scene, tank) {
     */
 
 
-    impact.position.z += 3.8;
-    impact.position.y += 0.8;
+    impact.position.z += 4.8;
+    impact.position.y += 0.95;
 
 
     if (scene.heroTankFollowCamera) {
@@ -171,7 +233,7 @@ var loadTankCrosshair = function (scene, tank) {
     impact.parent = camera;
     impact.material = new BABYLON.StandardMaterial("impact", scene);
     impact.material.diffuseTexture = new BABYLON.Texture("texture/crosshair.png", scene);
-    impact.material.emissiveColor = new BABYLON.Color3.Red();
+    impact.material.emissiveColor = new BABYLON.Color3.Yellow();
 
     //Is a PNG image so it has a transparency.
     impact.material.diffuseTexture.hasAlpha = true;
@@ -196,7 +258,7 @@ var loadTankCrosshair = function (scene, tank) {
  */
 
 var startTank = function (scene, tank) {
-
+    if(!tank) return;
     tank.move();
     tank.animateTurret(scene);
 
@@ -277,65 +339,6 @@ var startBlueTeamTanks = function (scene) {
 
 
 
-var respawnTanks = function (scene) {
-
-    //The maximum number of opponent tanks is 2.
-    if (difficulty == 'easy') {
-
-        var blueTanks = scene.blueTanks;
-        if (blueTanks) {
-            if (blueTanks.length < MAX_NUM_TANK_EASY) {
-
-                //We clone the tank from the heroTank
-                var heroTank = scene.heroTank;
-                if (heroTank) {
-                    globalCloneTankId = globalCloneTankId + 1;
-                    var respawnedTank = DoClone(heroTank, null, globalCloneTankId);
-
-                    var randomX = Math.floor(Math.random() * 100) + 3;
-                    var respawnedTankPosition = new BABYLON.Vector3(randomX, 1.6, 1000);
-
-                    respawnedTank = new Tank(respawnedTank, respawnedTank, scene, globalCloneTankId,
-                        4, 'clone_'.concat(globalCloneTankId.toString()), 'blue', true);
-
-                    scene.blueTanks.push(respawnedTank);
-                    respawnedTank.moveTank(respawnedTankPosition);
-
-                }
-            }
-        }
-    }
-    else {
-        var blueTanks = scene.blueTanks;
-        if (blueTanks) {
-            if (blueTanks.length < MAX_NUM_TANK_HARD) {
-
-                //We clone the tank from the heroTank
-                var heroTank = scene.heroTank;
-                if (heroTank) {
-                    globalCloneTankId = globalCloneTankId + 1;
-                    var respawnedTank = DoClone(heroTank, null, globalCloneTankId);
-
-                    var randomX = Math.floor(Math.random() * 100) + 3;
-                    var respawnedTankPosition = new BABYLON.Vector3(randomX, 1.6, 1000);
-
-                    respawnedTank = new Tank(respawnedTank, respawnedTank, scene, globalCloneTankId,
-                        4, 'clone_'.concat(globalCloneTankId.toString()), 'blue', true);
-
-
-                    respawnedTank.moveTank(respawnedTankPosition);
-
-                }
-            }
-        }
-    }
-
-}
-
-
-
-
-
 /**
  * This function register an action for the hero tank for each and every loot box that is 
  * rendered in the scene. Whenever the hero tank touches one of the loot boxes it collects
@@ -350,6 +353,11 @@ var registerLootBoxTriggers = function (scene) {
     */
 
     if (!scene) return;
+
+    //Possible bug
+    if(scene != Game.scenes[Game.activeScene]) return;
+
+
 
     if (!scene.heroTank) return;
 
@@ -375,6 +383,9 @@ var registerLootBoxTriggers = function (scene) {
     var heroTank = scene.heroTank;
     var heroTankBody = heroTank.getBody();
 
+    if(!heroTankBody) return;
+
+
 
     //Register the action manager for the "body" of the tank.
     heroTankBody.actionManager = new BABYLON.ActionManager(scene);
@@ -392,7 +403,7 @@ var registerLootBoxTriggers = function (scene) {
             },
 
             function () {
-
+              
                 //Dispose the loot box and free some memory.
                 box.lootBox.dispose();
 
@@ -421,7 +432,7 @@ var registerLootBoxTriggers = function (scene) {
                             var urlTexture = 'texture/cubeTextures/hearth/health';
                             var index = theBox.index;
                             var scale = 5;
-                            texturizeLootBox(scene, theBox, urlTexture, index, scale);
+                            texturizeLootBox(scene, theBox, urlTexture, index, scale,0.7);
                             animateLootBoxes(scene,theBox);
 
                         }, LOOT_BOX_RESPAWN_TIME);
@@ -436,6 +447,7 @@ var registerLootBoxTriggers = function (scene) {
                         var theBox = box;
                         var theScene = scene;
 
+                        
                         //After a time that depends on LOOT_BOX_RESPAWN_TIME the loot box must respawn.
                         setTimeout(function () {
 
@@ -448,8 +460,10 @@ var registerLootBoxTriggers = function (scene) {
                             var urlTexture = 'texture/cubeTextures/machinegun/machinegun';
                             var index = theBox.index;
                             var scale = 5;
-                            texturizeLootBox(scene, theBox, urlTexture, index, scale);
+                            texturizeLootBox(scene, theBox, urlTexture, index, scale,0.7);
                             animateLootBoxes(scene,theBox);
+
+
 
 
                         }, LOOT_BOX_RESPAWN_TIME);
@@ -477,7 +491,7 @@ var registerLootBoxTriggers = function (scene) {
                             var urlTexture = 'texture/cubeTextures/cannonball/cannonball';
                             var index = theBox.index;
                             var scale = 5;
-                            texturizeLootBox(scene, theBox, urlTexture, index, scale);
+                            texturizeLootBox(scene, theBox, urlTexture, index, scale, 0.7);
                             animateLootBoxes(scene,theBox);
 
 
@@ -505,7 +519,7 @@ var registerLootBoxTriggers = function (scene) {
                             var urlTexture = 'texture/cubeTextures/coin/coin';
                             var index = theBox.index;
                             var scale = 5;
-                            texturizeLootBox(scene, theBox, urlTexture, index, scale);
+                            texturizeLootBox(scene, theBox, urlTexture, index, scale, 0.7);
                             animateLootBoxes(scene,theBox);
 
 
@@ -538,7 +552,7 @@ var registerLootBoxTriggers = function (scene) {
  * reaches the border of the map, it will be automatically teleported to its spawn position.
  * It is a very  basic "out of map" trigger strategy.
  * @param {BABYLON.Scene} scene the object representing the scene.
- */
+*/
 var registerOutsideOfMapTrigger = function (scene) {
     if (!scene || Game.scenes[Game.activeScene] != scene) return;
     if (!scene.ground) return;
@@ -589,3 +603,10 @@ var registerOutsideOfMapTrigger = function (scene) {
 
     
 }
+
+
+
+
+/**
+ * This function will create animations for the main menu tanks.  
+*/

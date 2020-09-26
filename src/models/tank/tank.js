@@ -240,12 +240,12 @@ class Tank {
         }
 
 
-        if(Tank.MACHINE_GUN_COOLDOWN_HEROTANK == undefined){
+        if (Tank.MACHINE_GUN_COOLDOWN_HEROTANK == undefined) {
             Tank.MACHINE_GUN_COOLDOWN_HEROTANK = 750;
         }
 
-        if(Tank.MACHINE_GUN_COOLDOWN_CLONETANK == undefined){
-            Tank.MACHINE_GUN_COOLDOWN_CLONETANK =4500;
+        if (Tank.MACHINE_GUN_COOLDOWN_CLONETANK == undefined) {
+            Tank.MACHINE_GUN_COOLDOWN_CLONETANK = 4500;
         }
 
 
@@ -271,7 +271,7 @@ class Tank {
         }
 
         if (Tank.bounderYScaleMultiplier == undefined) {
-            Tank.bounderYScaleMultiplier = 1.0;
+            Tank.bounderYScaleMultiplier = 1.5;
         }
 
 
@@ -308,7 +308,7 @@ class Tank {
 
         //Create then, the bounding box with all the relevant parameters
         this.bounder = this.createBoundingBox();
-
+        this.bounder.isVisible = false;
 
 
 
@@ -372,12 +372,12 @@ class Tank {
 
         //Define some constants that will be used for the particle system
         if (Tank.CANNON_BALL_TIMEOUT == undefined) {
-            Tank.CANNON_BALL_TIMEOUT = 2500;
+            Tank.CANNON_BALL_TIMEOUT = 1500;
         }
 
         //If it is undefined, create the particle system
         var particleSystemObject = this.createTankParticleSystem("Cannon Particle".concat(this.id.toString()));
-       
+
         //Collect the sphere emitter and the particle system.
         this.cannonParticleSystem = particleSystemObject.particleSystem;
         this.cannonSphereEmitter = particleSystemObject.sphereEmitter;
@@ -392,7 +392,7 @@ class Tank {
         this.tankSphereEmitter = particleSystemObject.sphereEmitter;
 
 
-        
+
 
         //Customize the tank particle sytem that will model explosions.
 
@@ -465,16 +465,16 @@ class Tank {
 
 
         this.hitBoundingBox = this.createHitBoundingBox();
+        this.hitBoundingBox.isVisible = false;
+
 
         //It works with the hitBoundingBox.
-        this.tankParticleSystem.emitter =this.hitBoundingBox;
-        //console.log(this.tankParticleSystem);
-
+        this.tankParticleSystem.emitter = this.hitBoundingBox;
 
 
 
         //Define a class static variable that determines the AI shooting.
-        if(Tank.AI_SHOOTING_DISTANCE == undefined){
+        if (Tank.AI_SHOOTING_DISTANCE == undefined) {
             Tank.AI_SHOOTING_DISTANCE = 550;
         }
 
@@ -832,16 +832,13 @@ class Tank {
 
         //tank.speed contains the current vector that define the speed of the tank.
         if (WASD_handler.isWPressed || WASD_handler.isSPressed || WASD_handler.isAPressed || WASD_handler.isDPressed) {
+
             if (WASD_handler.isWPressed) {
 
                 //Rotate the wheels clockwise to simulate movement.
                 var speedWheels = -0.1;
                 this.animateWheels(speedWheels);
 
-                if (WASD_handler.isWForbidden) {
-                    this.speed = 0;
-                    return;
-                }
 
 
                 //Increase the speed up to a maximum value (the tank is accelerating).
@@ -850,7 +847,6 @@ class Tank {
 
                 if (this.speed > Tank.MAX_MOVEMENT_SPEED_FORWARD)
                     this.speed = Tank.MAX_MOVEMENT_SPEED_FORWARD;
-
 
 
 
@@ -865,10 +861,6 @@ class Tank {
                 var speedWheels = 0.1;
                 this.animateWheels(speedWheels);
 
-                if (WASD_handler.isSForbidden) {
-                    this.speed = 0;
-                    return;
-                }
 
                 //Decrease the speed up to a maximum value (the tank is breaking).
                 this.speed -= 0.02;
@@ -895,7 +887,7 @@ class Tank {
 
                 //Do not freeze the tank is neither W nor S are pressed.
                 if (!WASD_handler.isWPressed && !WASD_handler.isSPressed) {
-                    this.bounder.moveWithCollisions(this.frontVector.multiplyByFloats(this.speed, this.speed, this.speed));
+                    this.slowDown(0.2);
                 }
 
             }
@@ -909,23 +901,61 @@ class Tank {
 
                 //Do not freeze the tank is neither W nor S are pressed.
                 if (!WASD_handler.isWPressed && !WASD_handler.isSPressed) {
-                    this.bounder.moveWithCollisions(this.frontVector.multiplyByFloats(this.speed, this.speed, this.speed));
+                   this.slowDown(0.2);
                 }
             }
         }
-        else {
-            this.speed = 0;
-        }
-
-
-
 
 
         /**
-         * Implement some "freno motore" deceleration due to friction with ground.
+         * Implement some "freno motore" deceleration due to the (simulated) friction with ground.
         */
+        else {
+            this.slowDown(0.02);
+        }
 
     }
+
+
+    /**
+     * 
+     * @param {*} slowDownParameter 
+     * @param {*} slowDownCutoff 
+    */
+    slowDown(slowDownParameter, slowDownCutoff = 0.2) {
+        
+        if(!this.bounder) return;
+        
+        if (slowDownParameter < 0) {
+            var slowDownParameter = Math.abs(slowDownParameter);
+        }
+
+
+        if (Math.abs(this.speed) < 0.02) {
+
+            this.speed = 0;
+        }
+        else {
+            if (this.speed > 0) {
+                var animateWheelsSpeed = -0.1;
+                this.animateWheels(animateWheelsSpeed);
+                this.speed = this.speed - 0.02;
+            }
+            else {
+
+                var animateWheelsSpeed = 0.1;
+                this.animateWheels(animateWheelsSpeed);
+                this.speed = this.speed + 0.02;
+            }
+        }
+        this.bounder.moveWithCollisions(this.frontVector.multiplyByFloats(this.speed, this.speed, this.speed));
+
+    }
+
+
+
+
+
 
 
 
@@ -1038,13 +1068,13 @@ class Tank {
 
 
         //If the tank actions are not enabled, we can't fire any cannon ball.
-        if(!this.isClone)
-            if (!TankAction_handler) 
+        if (!this.isClone)
+            if (!TankAction_handler)
                 return;
 
         //If the button designated to fire the cannon balls is not pressed, we can't fire.
-        if(!this.isClone)
-            if(!scene.arleadyLocked || !TankAction_handler.isLeftMousePressed)
+        if (!this.isClone)
+            if (!scene.arleadyLocked || !TankAction_handler.isLeftMousePressed)
                 return;
 
         TankAction_handler.isLeftMousePressed = false;
@@ -1058,9 +1088,9 @@ class Tank {
 
 
         //Check if the tank has some cannon bullets left.
-        if(!this.isClone){
-          
-            if (this.tankStatus.cannonBullets <= 0) 
+        if (!this.isClone) {
+
+            if (this.tankStatus.cannonBullets <= 0)
                 return;
         }
 
@@ -1137,7 +1167,8 @@ class Tank {
 
 
         //Play the sound of firing cannon ball
-        scene.assets["cannonSound"].play();
+        if (soundEnabled)
+            scene.assets["cannonSound"].play();
 
 
 
@@ -1230,7 +1261,6 @@ class Tank {
 
                     ,
                     function () {
-                        console.log('Red tank '.concat(redTank.id.toString()).concat("hit the blue tank ").concat(tank.id.toString()));
 
                         redTank.cannonParticleSystem.stop();
                         //Temporary source for the emitter. If the emitter is disposed, the particle system stops working.
@@ -1246,13 +1276,14 @@ class Tank {
                         cannonBall.dispose();
 
 
-                       
+
                         tank.tankParticleSystem.start();
 
 
 
                         if (scene.assets) {
-                            scene.assets['explosionSound'].play();
+                            if (soundEnabled)
+                                scene.assets['explosionSound'].play();
                         }
 
 
@@ -1287,19 +1318,19 @@ class Tank {
 
                                 //Set a timeout for the respawn.
                                 setTimeout(function () {
-                                   
 
-                                    console.log("Spawning a new tank with id: ".concat(tankId.toString()));
+
+
                                     //Clone a tank (from the hero tank) and istantiate a Tank object that represents the blue team tank.
-                                    
+
                                     var clone = DoClone(heroTank.root, null, tankId);
                                     var blueTank = new Tank(clone, clone, scene, tankId, 4, 'clone_'.concat(tankId.toString()), 'blue', true);
 
-                                   
+
                                     var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), 0);
                                     blueTank.getTurret().rotationQuaternion = quaternion;
 
-                                   
+
                                     blueTank.setSpawnPoint(spawnPosition);
                                     blueTank.teleportSpawn();
 
@@ -1310,7 +1341,7 @@ class Tank {
                             //Temporary source for the emitter. If the emitter is disposed, the particle system stops working.
                             tank.tankParticleSystem.emitter = new BABYLON.Vector3(0, -100, 0);
 
-                           
+
                             tank.gotKilled();
                         }
                     }
@@ -1339,7 +1370,7 @@ class Tank {
                     parameter: tank.hitBoundingBox
                 },
                     function () {
-                        console.log('Blue tank '.concat(blueTank.id.toString()).concat("hit the red tank ").concat(tank.id.toString()));
+
                         blueTank.cannonParticleSystem.stop();
                         //Temporary source for the emitter. If the emitter is disposed, the particle system stops working.
                         blueTank.cannonParticleSystem.emitter = new BABYLON.Vector3(0, -100, 0);
@@ -1347,13 +1378,14 @@ class Tank {
 
 
                         //Trigger the tank particle system for explosions
-                       
+
                         tank.tankParticleSystem.start();
 
 
 
                         if (scene.assets) {
-                            scene.assets['explosionSound'].play();
+                            if (soundEnabled)
+                                scene.assets['explosionSound'].play();
                         }
 
 
@@ -1381,7 +1413,7 @@ class Tank {
 
                                 //Set a timeout for the respawn.
                                 setTimeout(function () {
-                                    
+
                                     //Clone a tank (from the hero tank) and istantiate a Tank object that represents the blue team tank.
                                     var clone = DoClone(heroTank.root, null, tankId);
                                     var redTank = new Tank(clone, clone, scene, tankId, 4, 'clone_'.concat(tankId.toString()), 'red', true);
@@ -1399,8 +1431,8 @@ class Tank {
                             }
 
 
-                           
-                            
+
+
                             tank.gotKilled();
                         }
                     }
@@ -1409,6 +1441,7 @@ class Tank {
             });
 
         }
+
 
         return;
     }
@@ -1421,7 +1454,6 @@ class Tank {
      * @param {BABYLON.Scene} scene the scene object.
      * @todo make the tank able to rotate the turret along the z axis (move upside down).
      * @todo make the tank machine gun damage decrease as the distance between the two tanks increases.
-     * @bug When the machine gun bullets count reaches 0, the tank is no longer able to use the machine gun. The bug is in this function.
      */
     fireGun(scene) {
 
@@ -1439,17 +1471,19 @@ class Tank {
          * Check whether the current active camera is the tank follow camera.
         */
         var camera = scene.activeCamera;
-        if (camera != scene.heroTankFollowCamera && !this.iscClone) return;
+        if (!this.isClone)
+            if (camera != scene.heroTankFollowCamera)
+                return;
 
 
 
-        //If the the left mouse button is not pressed the tank is not allowed to shoot.
+
         var tank = this;
 
 
-
-        if(!this.isClone)
-            if(!scene.arleadyLocked || !TankAction_handler.isLeftMousePressed) 
+        //If the the left mouse button is not pressed the tank is not allowed to shoot
+        if (!this.isClone)
+            if (!scene.arleadyLocked || !TankAction_handler.isLeftMousePressed)
                 return;
 
         TankAction_handler.isLeftMousePressed = false;
@@ -1461,11 +1495,19 @@ class Tank {
         if (!tank.canFireGun) return;
         tank.canFireGun = false;
 
+        if (!this.isClone) {
+            setTimeout(function () {
+                tank.canFireGun = true;
+            }, Tank.MACHINE_GUN_COOLDOWN_HEROTANK);
+        }
+        else {
+            setTimeout(function () {
+                tank.canFireGun = true;
+            }, Tank.MACHINE_GUN_COOLDOWN_CLONETANK);
+        }
 
-
-        //Check whether the tank has some machine gun bullets left.
-
-        if(!this.isClone)
+        //Check whether the hero tank has some bullets left.
+        if (!this.isClone)
             if (tank.tankStatus.machineGunBullets <= 0)
                 return;
 
@@ -1477,39 +1519,32 @@ class Tank {
 
 
         //Play the sound of the machine gun (to be improved: select another sound).
-        scene.assets['gunSound'].play();
 
-        if(!this.isClone){
-            setTimeout(function () {
-                tank.canFireGun = true;
-            }, Tank.MACHINE_GUN_COOLDOWN_HEROTANK);
-        }
-        else{
-            setTimeout(function () {
-                tank.canFireGun = true;
-            }, Tank.MACHINE_GUN_COOLDOWN_CLONETANK);
-        }
+        if (soundEnabled)
+            scene.assets['gunSound'].play();
+
+
 
         //By default the ray is shot from the center of the tank and will hit the tank ( from the inside). We have to adjust it in order to
         //target the other objects.
-        
+
         /*If the current tank is a clone we slightly rotate the turret so that the tank is not
             perfect when shooting at the player.
         */
-      
-        
-        
+
+
+
         var origin = this.getCannon().getAbsolutePosition();
         var cannonDirection = this.getCannon().getDirection(new BABYLON.Vector3(0, 0, -1));
 
 
-        var random_orientation = Math.random() *10.0;
-        if(this.isClone){
+        var random_orientation = Math.random() * 10.0;
+        if (this.isClone) {
             var direction = new BABYLON.Vector3(cannonDirection.x + random_orientation, cannonDirection.y,
                 cannonDirection.z);
         }
-        else{
-            var direction = new BABYLON.Vector3(cannonDirection.x , cannonDirection.y,
+        else {
+            var direction = new BABYLON.Vector3(cannonDirection.x, cannonDirection.y,
                 cannonDirection.z);
         }
 
@@ -1523,7 +1558,7 @@ class Tank {
 
 
         //If randomly rotated adjust the position of the clone turret
-       
+
 
         rayHelper.show(scene, new BABYLON.Color3.Yellow);
 
@@ -1590,7 +1625,7 @@ class Tank {
                 }
 
                 var pickedTank = pickedMeshParent.Tank;
-                if(!pickedTank ) {
+                if (!pickedTank) {
                     console.log(pickedMeshParent.name);
                     return;
                 }
@@ -1620,8 +1655,8 @@ class Tank {
                         setTimeout(function () {
 
                             //Clone a tank (from the hero tank) and istantiate a Tank object that represents the blue team tank.
-                            
-                           
+
+
                             var clone = DoClone(heroTank.root, null, tankId);
                             var blueTank = new Tank(clone, clone, scene, tankId, 4, 'clone_'.concat(tankId.toString()), 'blue', true);
 
@@ -1650,10 +1685,10 @@ class Tank {
             */
             else {
 
-                console.log(pickedMesh);
+
                 var pickedTank = pickedMesh.Tank;
                 pickedTank.decreaseHealth(Tank.MACHINE_GUN_DAMAGE);
-                 //If the picked tank has no more life points, then it must die.
+                //If the picked tank has no more life points, then it must die.
                 if (pickedTank.tankStatus.health == 0) {
 
                     //Pick the hero tank.
@@ -1675,8 +1710,8 @@ class Tank {
                         setTimeout(function () {
 
                             //Clone a tank (from the hero tank) and istantiate a Tank object that represents the blue team tank.
-                            
-                           
+
+
                             var clone = DoClone(heroTank.root, null, tankId);
                             var blueTank = new Tank(clone, clone, scene, tankId, 4, 'clone_'.concat(tankId.toString()), 'blue', true);
 
@@ -1691,12 +1726,12 @@ class Tank {
 
                         }, TANK_RESPAWN_TIME);
 
-                        
+
                     }
 
                     pickedTank.gotKilled();
-                   
-                }   
+
+                }
 
             }
         }
@@ -1811,10 +1846,10 @@ class Tank {
              * argument, it will be automatically converted to an integer number
             */
 
-            
-            this.tankStatus.machineGunBullets = this.tankStatus.machineGunBullets + Math.floor(quantity);
 
-            
+            this.tankStatus.machineGunBullets = this.tankStatus.machineGunBullets + Math.floor(quantity);
+            console.log(this.tankStatus.machineGunBullets);
+
             /**
              * If the count goes below zero, we will adjust this count to zero: it means
              * that the tank has run out of machine gun bullets. 
@@ -1899,7 +1934,6 @@ class Tank {
 
 
         //There are actually 12 childeren meshes.
-        //console.log(children.length);
 
 
         for (var i = 0; i < children.length; i++) {
@@ -2145,7 +2179,7 @@ class Tank {
         //We want the dude to always look at the direction of the tank and to always follow the tank.
         var direction = tank.position.subtract(this.root.position);
 
-        
+
         //Obtain the length of the vector. 
         var distance = direction.length();
 
@@ -2173,8 +2207,8 @@ class Tank {
 
         //Then, move the bounding box of the tank.
         this.bounder.moveWithCollisions(dir.multiplyByFloats(followSpeed, followSpeed, followSpeed));
-        
-        
+
+
         return distance;
 
     }
@@ -2370,17 +2404,17 @@ class Tank {
         this.tankParticleSystem.stop();
         this.cannonParticleSystem.stop();
 
-        this.tankParticleSystem.emitter = new BABYLON.Vector3(0,-200,0);
+        this.tankParticleSystem.emitter = new BABYLON.Vector3(0, -200, 0);
 
-        this.cannonParticleSystem.emitter = new BABYLON.Vector3(0,-200,0);
+        this.cannonParticleSystem.emitter = new BABYLON.Vector3(0, -200, 0);
 
         this.tankParticleSystem.dispose();
         this.cannonParticleSystem.dispose();
 
         this.tankSphereEmitter = null;
-        this.cannonSphereEmitter= null;
+        this.cannonSphereEmitter = null;
 
-       
+
         /** 
          * This block of code will be executed when a red team tank (for example the hero tank)
          * dies (tank.tankStatus.health == 0).  
@@ -2393,7 +2427,6 @@ class Tank {
             managing_redTanksArray = true;
 
 
-            console.log("Adjusting the red tank arrays");
 
             //Refactoring completely the redTanks array. Create a new array without the dead tank.
             var newArray = [];
@@ -2444,7 +2477,6 @@ class Tank {
             //This flag is set to avoid any call to the scene.blueTanks array in the "startBlueTeamTanks" function (to be implemented).
             managing_blueTanksArray = true;
 
-            console.log("Adjusting the blue tank arrays");
 
 
             //Refactoring completely the blueTanks array.
@@ -2468,8 +2500,6 @@ class Tank {
         }
 
 
-        console.log("Tank ".concat(this.id.toString()).concat(" dies"));
-
         return;
     }
 
@@ -2488,6 +2518,10 @@ class Tank {
         Game.activeScene = DEATH_MENU_SCENE_VALUE;
 
         scene.dispose();
+
+
+        //Free the user from the pointer lock
+        document.exitPointerLock();
 
 
         //Render the death menu

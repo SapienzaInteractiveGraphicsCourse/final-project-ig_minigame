@@ -52,7 +52,7 @@ function modifySettings(scene){
             canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock ||
                                         null;
             canvas.requestPointerLock();
-            console.log("Requesting pointer location");
+         
         }
 
     
@@ -197,6 +197,8 @@ var enableKeyEventListeners= function(){
                     TankAction_handler.isRPressed = false;
             }
 
+        
+
         });
     }
 
@@ -264,6 +266,8 @@ var enableKeyEventListeners= function(){
                 if(scene.debugCamera != undefined){
                  
                     scene.activeCamera = scene.debugCamera;
+                    if(!isSceneFreezed)
+                        isSceneFreezed = true;
                 }
             }   
             
@@ -273,6 +277,8 @@ var enableKeyEventListeners= function(){
                 if(scene.heroTankFollowCamera != undefined){
                  
                     scene.activeCamera = scene.heroTankFollowCamera;
+                    if(isSceneFreezed)
+                        isSceneFreezed = false;
                 }
             }  
 
@@ -309,6 +315,7 @@ var enableKeyEventListeners= function(){
                 if(scene.heroTank){
                     //Change the current weapon of the tank into the machine gun .
                     console.log(scene.heroTank.root.getAbsolutePosition());
+                    console.log(scene.heroTankFollowCamera.position);
                     
                 }
             }  
@@ -322,6 +329,10 @@ var enableKeyEventListeners= function(){
                 //We will set this '1' number as a constant.
                 if(Game.activeScene == 1){
 
+
+
+                    //Dispose the scene hero tank otherwise other functions will try to access it and will trigger some errors.
+                    scene.heroTank = null;
 
 
                     //Stop the render loop of the engine.

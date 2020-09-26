@@ -19,8 +19,7 @@
  */
 var configureAssetsManager = function (scene) {
 
-
-
+ 
     //Dictionary for sounds
     scene.assets = {};
 
@@ -39,19 +38,35 @@ var configureAssetsManager = function (scene) {
 
     //Callback function that is triggered when the assets manager has ended all its tasks.
     assetsManager.onFinish = function (tasks) {
-        if (Game.activeScene > 0) {
-            Game.scenes[Game.activeScene - 1].dispose();
+        /**
+        * If the scene is the interactive level, the rendering loop is a little bit more complex
+        * and there is an appropriate function.
+        */
+       
+        if(Game.activeScene == FIRST_LEVEL_SCENE_VALUE){
+            engine.runRenderLoop(function () {
+                scene.toRender();           
+            });
         }
-        engine.runRenderLoop(function () {
-            scene.toRender();
-        });
+        else if(Game.activeScene == MAIN_MENU_SCENE_VALUE){
+            engine.runRenderLoop(function(){
+                scene.render();
+            });
+        }
+
+        else if(Game.activeScene == DEATH_MENU_SCENE_VALUE){
+            engine.runRenderLoop(function(){
+                scene.render();
+            });
+        }
     };
 
 
     scene.assetsManager = assetsManager;
 
     //We load the sounds before the game starts.
-    loadSounds(scene);
+    if(Game.activeScene == FIRST_LEVEL_SCENE_VALUE)
+        loadSounds(scene);
 
     return assetsManager;
 }
@@ -334,8 +349,8 @@ var createFollowCamera = function (scene, target, followCameraProperties, name =
 
 
     //To constraint the movement of the camera. It must not be able to freely move into the scene.
-    followCamera.upperHeightOffsetLimit = followCameraProperties.heightOffset;
-    followCamera.lowerHeightOffsetLimit = followCameraProperties.heightOffset -20.0;
+    followCamera.upperHeightOffsetLimit = followCameraProperties.heightOffset -5.0;
+    followCamera.lowerHeightOffsetLimit = followCameraProperties.heightOffset -12.0;
     followCamera.noRotationConstraint = false;
     
 
@@ -367,7 +382,7 @@ var createSkyBox = function (scene) {
 
     
     skybox.material = skyboxMaterial;
-    console.log(skybox);
+   
     return;
 }
 
@@ -473,7 +488,7 @@ var createLootBoxes = function (scene) {
                 var box = scene.lootBoxes[i];
                 var index = box.index;
                 var scale = 5;
-                texturizeLootBox(scene, box, urlTexture, index, scale);
+                texturizeLootBox(scene, box, urlTexture, index, scale,0.7);
 
                 animateLootBoxes(scene,box);
 
@@ -500,7 +515,7 @@ var createLootBoxes = function (scene) {
                 var box = scene.lootBoxes[i];
                 var index = box.index;
                 var scale = 5;
-                texturizeLootBox(scene, box, urlTexture, index, scale);
+                texturizeLootBox(scene, box, urlTexture, index, scale, 0.7);
 
                 animateLootBoxes(scene,box);
 
@@ -531,7 +546,7 @@ var createLootBoxes = function (scene) {
                 var box = scene.lootBoxes[i];
                 var index = box.index;
                 var scale = 5;
-                texturizeLootBox(scene, box, urlTexture, index, scale);
+                texturizeLootBox(scene, box, urlTexture, index, scale, 0.7);
 
 
                 animateLootBoxes(scene,box);
@@ -564,7 +579,7 @@ var createLootBoxes = function (scene) {
                 var box = scene.lootBoxes[i];
                 var index = box.index;
                 var scale = 5;
-                texturizeLootBox(scene, box, urlTexture, index, scale);
+                texturizeLootBox(scene, box, urlTexture, index, scale, 0.7);
 
 
                 animateLootBoxes(scene,box);
@@ -595,7 +610,7 @@ var createLootBoxes = function (scene) {
                 var box = scene.lootBoxes[i];
                 var index = box.index;
                 var scale = 5;
-                texturizeLootBox(scene, box, urlTexture, index, scale);
+                texturizeLootBox(scene, box, urlTexture, index, scale, 0.7);
 
 
                 animateLootBoxes(scene,box);
@@ -626,7 +641,7 @@ var createLootBoxes = function (scene) {
                 var box = scene.lootBoxes[i];
                 var index = box.index;
                 var scale = 5;
-                texturizeLootBox(scene, box, urlTexture, index, scale);
+                texturizeLootBox(scene, box, urlTexture, index, scale, 0.7);
 
 
                 animateLootBoxes(scene,box);
@@ -668,7 +683,7 @@ var createLootBoxes = function (scene) {
                     var box = scene.lootBoxes[i];
                     var index = box.index;
                     var scale = 5;
-                    texturizeLootBox(scene, box, urlTexture, index, scale);
+                    texturizeLootBox(scene, box, urlTexture, index, scale, 0.7);
 
                     animateLootBoxes(scene,box);
 
@@ -699,7 +714,7 @@ var createLootBoxes = function (scene) {
                     var box = scene.lootBoxes[i];
                     var index = box.index;
                     var scale = 5;
-                    texturizeLootBox(scene, box, urlTexture, index, scale);
+                    texturizeLootBox(scene, box, urlTexture, index, scale, 0.7);
 
                     animateLootBoxes(scene,box);
 
@@ -733,7 +748,7 @@ var createLootBoxes = function (scene) {
                     var box = scene.lootBoxes[i];
                     var index = box.index;
                     var scale = 5;
-                    texturizeLootBox(scene, box, urlTexture, index, scale);
+                    texturizeLootBox(scene, box, urlTexture, index, scale,  0.7);
 
                     animateLootBoxes(scene,box);
 
@@ -751,11 +766,11 @@ var createLootBoxes = function (scene) {
     var newLootBox =  {
         position:new BABYLON.Vector3(0,0,0),
         index: 10,
-        lootBox: new BABYLON.Mesh.CreateBox('skybox', 2800, scene),
+        lootBox: new BABYLON.Mesh.CreateBox('skybox', 5000, scene),
         type: 'none'
     };
 
-    urlTexture = 'texture/cubeTextures/skybox/skybox';
+    urlTexture = 'texture/cubeTextures/space/space';
     var index = box.index;
     var scale = 5;
     texturizeLootBox(scene, newLootBox, urlTexture, index, scale);
@@ -782,12 +797,12 @@ var createLootBoxes = function (scene) {
  * @param {Number} index a number representing the index of the loot box in the scene.
  * @param {Float} scale  a floating point value representing the scale factor to be applied to both the "u" and the "v" axes of the texture.
  */
-var texturizeLootBox = function (scene, box, urlTexture, index, scale = 1.0) {
+var texturizeLootBox = function (scene, box, urlTexture, index, scale = 1.0, alpha = 1.0) {
     var material = new BABYLON.StandardMaterial('lootBoxMaterial'.concat((index).toString()), scene);
     material.reflectionTexture = new BABYLON.CubeTexture(urlTexture, scene);
     material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     material.disableLighting = true;
-
+    material.alpha = alpha;
 
     material.reflectionTexture.uScale = scale;
     material.reflectionTexture.vScale = scale;
@@ -818,9 +833,9 @@ var animateLootBoxes = function(scene,box){
     var position = box.position;
 
     var upsideDownKeys = [];
-    upsideDownKeys.push({frame:0, value: new BABYLON.Vector3(position.x,7.0,position.z)});
-    upsideDownKeys.push({frame:50, value: new BABYLON.Vector3(position.x,12.0,position.z)});
-    upsideDownKeys.push({frame:100, value: new BABYLON.Vector3(position.x,7.0,position.z)});
+    upsideDownKeys.push({frame:0, value: new BABYLON.Vector3(position.x,6.2,position.z)});
+    upsideDownKeys.push({frame:50, value: new BABYLON.Vector3(position.x,10.0,position.z)});
+    upsideDownKeys.push({frame:100, value: new BABYLON.Vector3(position.x,6.2,position.z)});
 
 
     upSideDownAnimation.setKeys(upsideDownKeys);

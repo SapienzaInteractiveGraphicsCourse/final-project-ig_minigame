@@ -22,31 +22,40 @@
 */
 var mainMenu = function (engine) {
 
+
+
+
+
     // This creates a basic Babylon Scene object (non-mesh).
     var scene = new BABYLON.Scene(engine);
-   
+
     // light1
-	var light = new BABYLON.HemisphericLight("dir01", new BABYLON.Vector3(0, 1, 0), scene);
-	light.intensity = 0.5;
+    var light = new BABYLON.HemisphericLight("dir01", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.5;
     light.groundColor = new BABYLON.Color3(2, 2, 2);
-    
+
     // This creates and positions a free camera (non-mesh).
     var camera = new BABYLON.FreeCamera("cameraMainMenu", new BABYLON.Vector3(0, 7, -10), scene);
     camera.rotation.z += 30;
 
 
     // This targets the camera to scene origin
-    camera.setTarget(new BABYLON.Vector3(0,7,10));
-    camera.position = new BABYLON.Vector3(0,7,7);
+    camera.setTarget(new BABYLON.Vector3(0, 7, 10));
+    camera.position = new BABYLON.Vector3(0, 7, -15);
 
     var ground = BABYLON.Mesh.CreateGround("groundMenu", 100, 100, 1, scene);
-	var groundMaterial = new BABYLON.StandardMaterial("groundMenuMaterial", scene);
-	groundMaterial.diffuseTexture = new BABYLON.Texture("texture/groundGrid.jpg", scene);
+    var groundMaterial = new BABYLON.StandardMaterial("groundMenuMaterial", scene);
+    groundMaterial.diffuseTexture = new BABYLON.Texture("texture/groundGrid.jpg", scene);
+
     //groundMaterial.diffuseTexture.level = .25;
-	//groundMaterial.diffuseTexture.uScale = 6;
-	//groundMaterial.diffuseTexture.vScale = 6;
-	groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-	ground.material = groundMaterial;
+    //groundMaterial.diffuseTexture.uScale = 6;
+    //groundMaterial.diffuseTexture.vScale = 6;
+
+
+
+
+    groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    ground.material = groundMaterial;
 
 
     //Set the background color to black. You can actually use an image as background.
@@ -59,11 +68,19 @@ var mainMenu = function (engine) {
     var panelTitle = new BABYLON.GUI.StackPanel();
 
 
+
+
+    // Style for the title
+    var style = advancedTexture.createStyle();
+    style.fontSize = 24;
+    style.fontStyle = "bold";
+
     //Define the title container and some properties.
     var title = new BABYLON.GUI.TextBlock();
-    title.text = "Interactive Graphics MiniGame";
-    title.height = "30px";
+    title.text = "Interactive Graphics MiniGame \nPress Start Game to play";
+    title.height = "80px";
     title.color = "white";
+    title.style = style
 
     title.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_TOP;
     title.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
@@ -72,7 +89,6 @@ var mainMenu = function (engine) {
     //The title is a child of the panel (that contains the GUI object).
     panelTitle.addControl(title);
 
-    advancedTexture.addControl(panel);
 
     panelTitle.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_TOP;
     panelTitle.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
@@ -82,6 +98,7 @@ var mainMenu = function (engine) {
 
     var panel = new BABYLON.GUI.StackPanel();
 
+    //panel.addControl(title);
 
     //Add an interactive button to start the game and define some parameters.
     var buttonStartGame = BABYLON.GUI.Button.CreateSimpleButton("buttonStartGame", "Start Game");
@@ -89,7 +106,7 @@ var mainMenu = function (engine) {
     buttonStartGame.height = "90px";
     buttonStartGame.paddingBottom = "40px";
     buttonStartGame.color = "white";
-    buttonStartGame.background = "green";
+    buttonStartGame.background = "blue";
 
 
     //This listener will be triggered when the button is clicked (actually when the mouse "unpick" the object).
@@ -125,7 +142,7 @@ var mainMenu = function (engine) {
     buttonSound.width = 0.2;
     buttonSound.height = "40px";
     buttonSound.color = "white";
-    buttonSound.background = "green";
+    buttonSound.background = "blue";
 
     buttonSound.height = "90px";
     buttonSound.paddingBottom = "40px";
@@ -140,13 +157,13 @@ var mainMenu = function (engine) {
 
             soundEnabled = false;
 
-            buttonSound.textBlock.text = 'Disable sound';
+            buttonSound.textBlock.text = 'Enable sound';
 
 
         }
         else {
 
-            buttonSound.textBlock.text = 'Enable sound';
+            buttonSound.textBlock.text = 'Disable sound';
             soundEnabled = true;
 
 
@@ -207,6 +224,34 @@ var mainMenu = function (engine) {
 
     advancedTexture.addControl(panel);
 
+
+
+    /**
+     * Import two tank models for demonstration purposes. 
+    */
+
+    scene.assetsManager = configureAssetsManager(scene);
+
+    var model_names = ["Box", "Box1", "Box3", "Box4", "Box5", "Box6", "Box7", "Box9", "Box10", "Box11", "Box12", "Box13", "Box14", "Box15"];
+
+    var model_root_dir = 'models/tanks/basicTank/';
+    var babylon_file_name = 'tank.babylon';
+
+    //Those positions are just for rendering the object.
+    var importedModelPosition = {
+        'x': 10,
+        'y': 0,
+        'z': 10
+    };
+
+    var modelType = 'tank';
+
+
+
+
+    //Import the model of the first tank.
+    importModel(model_names, model_root_dir, babylon_file_name, scene, importedModelPosition, modelType);
+
     return scene;
 
 }
@@ -232,30 +277,82 @@ var deathMenu = function (engine) {
     // This creates and positions a free camera (non-mesh)
     var camera = new BABYLON.FreeCamera("cameraDeath", new BABYLON.Vector3(0, 5, -10), scene);
 
-    // This targets the camera to scene origin
-    camera.setTarget(BABYLON.Vector3.Zero());
-
     scene.clearColor = new BABYLON.Color3.Black;
+
+
+    // light1
+    var light = new BABYLON.HemisphericLight("dir02", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.5;
+    light.groundColor = new BABYLON.Color3(2, 2, 2);
+
+
+    camera.rotation.z += 30;
+
+
+    // This targets the camera to scene origin
+    camera.setTarget(new BABYLON.Vector3(0, 7, 10));
+    camera.position = new BABYLON.Vector3(0, 7, -15);
+
+    var ground = BABYLON.Mesh.CreateGround("groundDeath", 100, 100, 1, scene);
+    var groundMaterial = new BABYLON.StandardMaterial("groundDeathMaterial", scene);
+    groundMaterial.diffuseTexture = new BABYLON.Texture("texture/groundGrid.jpg", scene);
+
+
+    groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    ground.material = groundMaterial;
+
 
 
     // GUI
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("Death UI");
 
+
+
+    var panelTitle = new BABYLON.GUI.StackPanel();
+
+
+
+
+    // Style for the title
+    var styleTitle = advancedTexture.createStyle();
+    styleTitle.fontSize = 24;
+    styleTitle.fontStyle = "bold";
+
+    //Define the title container and some properties.
+    var title = new BABYLON.GUI.TextBlock();
+    title.text = "";
+    title.height = "80px";
+    title.color = "white";
+    title.style = styleTitle;
+
+    title.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_TOP;
+    title.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+
+
+    //The title is a child of the panel (that contains the GUI object).
+    panelTitle.addControl(title);
+
+
+    panelTitle.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_TOP;
+    panelTitle.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+
+    advancedTexture.addControl(panelTitle);
+
+
     var panel = new BABYLON.GUI.StackPanel();
 
-    var title = new BABYLON.GUI.TextBlock();
+
 
     if (!winningCondition)
-        title.text = "YOU DIED!";
+        title.text = "YOU DIED!\nPress main menu to go back to the main menu and start another game";
     else
-        title.text = "YOU WIN";
+        title.text = "YOU WIN!\nPress main menu to go back to the main menu and start another game";
     title.height = "60px";
     title.color = "white";
 
 
-    panel.addControl(title);
-
-
+   
+    
     //Add an interactive button to get back to the main menu and define some parameters.
     var buttonStartGame = BABYLON.GUI.Button.CreateSimpleButton("buttonDeathScreen", "Main menu");
     buttonStartGame.width = 0.2;
@@ -264,7 +361,7 @@ var deathMenu = function (engine) {
     buttonStartGame.paddingBottom = "40px";
 
     buttonStartGame.color = "white";
-    buttonStartGame.background = "green";
+    buttonStartGame.background = "blue";
 
     //This listener will be triggered when the button is clicked (actually when the mouse "unpick" the object).
     buttonStartGame.onPointerDownObservable.add(function () {
@@ -296,6 +393,40 @@ var deathMenu = function (engine) {
 
 
     panel.addControl(buttonStartGame);
+    advancedTexture.addControl(panel);
+
+
+
+
+
+
+
+
+    /**
+     * Import two tank models for demonstration purposes. 
+    */
+
+    scene.assetsManager = configureAssetsManager(scene);
+
+    var model_names = ["Box", "Box1", "Box3", "Box4", "Box5", "Box6", "Box7", "Box9", "Box10", "Box11", "Box12", "Box13", "Box14", "Box15"];
+
+    var model_root_dir = 'models/tanks/basicTank/';
+    var babylon_file_name = 'tank.babylon';
+
+    //Those positions are just for rendering the object.
+    var importedModelPosition = {
+        'x': 10,
+        'y': 0,
+        'z': 10
+    };
+
+    var modelType = 'tank';
+
+
+
+
+    //Import the model of the first tank.
+    importModel(model_names, model_root_dir, babylon_file_name, scene, importedModelPosition, modelType);
 
     return scene;
 

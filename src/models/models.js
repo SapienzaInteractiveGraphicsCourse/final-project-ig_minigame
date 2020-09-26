@@ -29,14 +29,14 @@ var importModel = function (model_names, model_root_dir, babylon_file_name, scen
      */
 
 
+    if(!scene.assetsManager) return;
 
     var meshTask = scene.assetsManager.addMeshTask("MeshesTask", model_names, model_root_dir, babylon_file_name);
-
-
+   
     var object_pos = position;
     meshTask.onSuccess = function (task) {
         //In task.loadedSkeletons there are the skeletons
-
+       
         onModelImported(task.loadedMeshes, task.loadedParticleSystems, task.loadedSkeletons, modelType);
     }
 
