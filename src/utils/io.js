@@ -327,6 +327,12 @@ var enableKeyEventListeners= function(){
                 
                 //Check that the current scene is the game not the main menu.
                 //We will set this '1' number as a constant.
+
+                //Free the pointer lock before rendering the main menu.
+                if(scene.arleadyLocked)
+                    document.exitPointerLock();
+
+
                 if(Game.activeScene == 1){
 
 

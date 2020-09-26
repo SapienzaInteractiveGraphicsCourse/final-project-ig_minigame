@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2020.7.5)  26 SEP 2020 16:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2020.7.5)  26 SEP 2020 21:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -630,19 +630,10 @@ LaTeX Info: Redefining \nameref on input line 20.
 \@outlinefile=\write3
 \openout3 = `report.out'.
 
+ [1
 
-Underfull \hbox (badness 10000) in paragraph at lines 25--34
-
- []
-
-[1
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 35--36
-
- []
-
-<images/scenario3.png, id=122, 1264.725pt x 554.07pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] <images/scenario3.png, id=
+121, 1264.725pt x 554.07pt>
 File: images/scenario3.png Graphic file (type png)
 
 <use images/scenario3.png>
@@ -658,28 +649,28 @@ Underfull \hbox (badness 10000) in paragraph at lines 48--49
 
  []
 
-<images/scenario.png, id=134, 1276.77pt x 611.28375pt>
+<images/scenario.png, id=133, 1276.77pt x 611.28375pt>
 File: images/scenario.png Graphic file (type png)
 
 <use images/scenario.png>
 Package pdftex.def Info: images/scenario.png used on input line 53.
 (pdftex.def)             Requested size: 155.24895pt x 74.32094pt.
 
-<images/scenario2.png, id=135, 1278.7775pt x 596.2275pt>
+<images/scenario2.png, id=134, 1278.7775pt x 596.2275pt>
 File: images/scenario2.png Graphic file (type png)
 
 <use images/scenario2.png>
 Package pdftex.def Info: images/scenario2.png used on input line 58.
 (pdftex.def)             Requested size: 155.24895pt x 72.3812pt.
 
-<images/thirdPerson.png, id=136, 1031.855pt x 598.235pt>
+<images/thirdPerson.png, id=135, 1031.855pt x 598.235pt>
 File: images/thirdPerson.png Graphic file (type png)
 
 <use images/thirdPerson.png>
 Package pdftex.def Info: images/thirdPerson.png used on input line 66.
 (pdftex.def)             Requested size: 341.43306pt x 197.9476pt.
  [3 <./images/scenario3.png> <./images/scenario.png> <./images/scenario2.png>]
-<images/lootBoxes.png, id=143, 852.18375pt x 615.29875pt>
+<images/lootBoxes.png, id=142, 852.18375pt x 615.29875pt>
 File: images/lootBoxes.png Graphic file (type png)
 
 <use images/lootBoxes.png>
@@ -699,229 +690,254 @@ Underfull \hbox (badness 10000) in paragraph at lines 88--89
  []
 
 [5 <./images/lootBoxes.png>]
-<images/beforeLoot.png, id=161, 971.63pt x 547.04375pt>
+<images/beforeLoot.png, id=160, 971.63pt x 547.04375pt>
 File: images/beforeLoot.png Graphic file (type png)
 
 <use images/beforeLoot.png>
 Package pdftex.def Info: images/beforeLoot.png used on input line 93.
 (pdftex.def)             Requested size: 155.24895pt x 87.40358pt.
 
-<images/afterLoot.png, id=162, 971.63pt x 547.04375pt>
+<images/afterLoot.png, id=161, 971.63pt x 547.04375pt>
 File: images/afterLoot.png Graphic file (type png)
 
 <use images/afterLoot.png>
 Package pdftex.def Info: images/afterLoot.png used on input line 98.
 (pdftex.def)             Requested size: 155.24895pt x 87.40358pt.
- [6 <./images/beforeLoot.png> <./images/afterLoot.png>] <images/model_sandbox.p
-ng, id=171, 1306.8825pt x 596.2275pt>
+ [6 <./images/beforeLoot.png> <./images/afterLoot.png>] <images/coin.png, id=16
+8, 925.4575pt x 529.98pt>
+File: images/coin.png Graphic file (type png)
+ <use images/coin.png>
+Package pdftex.def Info: images/coin.png used on input line 125.
+(pdftex.def)             Requested size: 137.9979pt x 79.02452pt.
+
+<images/cannonball.png, id=169, 925.4575pt x 529.98pt>
+File: images/cannonball.png Graphic file (type png)
+
+<use images/cannonball.png>
+Package pdftex.def Info: images/cannonball.png used on input line 130.
+(pdftex.def)             Requested size: 137.9979pt x 79.02452pt.
+
+<images/machinegun.png, id=170, 925.4575pt x 529.98pt>
+File: images/machinegun.png Graphic file (type png)
+
+<use images/machinegun.png>
+Package pdftex.def Info: images/machinegun.png used on input line 139.
+(pdftex.def)             Requested size: 137.9979pt x 79.02452pt.
+ <images/health.png, id=171, 925.4575pt x 529.98pt>
+File: images/health.png Graphic file (type png)
+
+<use images/health.png>
+Package pdftex.def Info: images/health.png used on input line 144.
+(pdftex.def)             Requested size: 137.9979pt x 79.02452pt.
+
+<images/model_sandbox.png, id=174, 1306.8825pt x 596.2275pt>
 File: images/model_sandbox.png Graphic file (type png)
 
 <use images/model_sandbox.png>
-Package pdftex.def Info: images/model_sandbox.png used on input line 128.
+Package pdftex.def Info: images/model_sandbox.png used on input line 164.
 (pdftex.def)             Requested size: 341.41663pt x 184.93779pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 134--135
+ [7 <./images/coin.png> <./images/cannonball.png> <./images/machinegun.png> <./
+images/health.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 170--171
 
  []
 
-[7 <./images/model_sandbox.png>]
-<images/evidencedModel.png, id=181, 1305.87875pt x 604.2575pt>
+<images/evidencedModel.png, id=184, 1305.87875pt x 604.2575pt>
 File: images/evidencedModel.png Graphic file (type png)
 
 <use images/evidencedModel.png>
-Package pdftex.def Info: images/evidencedModel.png used on input line 139.
+Package pdftex.def Info: images/evidencedModel.png used on input line 175.
 (pdftex.def)             Requested size: 341.41344pt x 184.93907pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 146--147
+ [8 <./images/model_sandbox.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 182--183
 
  []
 
-<images/evidencedModel2.png, id=183, 1305.87875pt x 597.23125pt>
+<images/evidencedModel2.png, id=191, 1305.87875pt x 597.23125pt>
 File: images/evidencedModel2.png Graphic file (type png)
 
 <use images/evidencedModel2.png>
-Package pdftex.def Info: images/evidencedModel2.png used on input line 153.
+Package pdftex.def Info: images/evidencedModel2.png used on input line 189.
 (pdftex.def)             Requested size: 155.24895pt x 70.9994pt.
 
-<images/evidencedModel9.png, id=184, 1301.86375pt x 605.26125pt>
+<images/evidencedModel9.png, id=192, 1301.86375pt x 605.26125pt>
 File: images/evidencedModel9.png Graphic file (type png)
 
 <use images/evidencedModel9.png>
-Package pdftex.def Info: images/evidencedModel9.png used on input line 158.
+Package pdftex.def Info: images/evidencedModel9.png used on input line 194.
 (pdftex.def)             Requested size: 155.24895pt x 72.17566pt.
 
-<images/evidencedModel4.png, id=185, 1303.87125pt x 605.26125pt>
+<images/evidencedModel4.png, id=193, 1303.87125pt x 605.26125pt>
 File: images/evidencedModel4.png Graphic file (type png)
 
 <use images/evidencedModel4.png>
-Package pdftex.def Info: images/evidencedModel4.png used on input line 162.
+Package pdftex.def Info: images/evidencedModel4.png used on input line 198.
 (pdftex.def)             Requested size: 155.24895pt x 72.06483pt.
 
-<images/evidencedModel11.png, id=186, 1305.87875pt x 607.26875pt>
+<images/evidencedModel11.png, id=194, 1305.87875pt x 607.26875pt>
 File: images/evidencedModel11.png Graphic file (type png)
 
 <use images/evidencedModel11.png>
-Package pdftex.def Info: images/evidencedModel11.png used on input line 167.
+Package pdftex.def Info: images/evidencedModel11.png used on input line 203.
 (pdftex.def)             Requested size: 155.24895pt x 72.19267pt.
- [8 <./images/evidencedModel.png>]
-<images/turret1.png, id=193, 1266.7325pt x 604.2575pt>
+ [9 <./images/evidencedModel.png>]
+<images/turret1.png, id=201, 1266.7325pt x 604.2575pt>
 File: images/turret1.png Graphic file (type png)
 
 <use images/turret1.png>
-Package pdftex.def Info: images/turret1.png used on input line 180.
+Package pdftex.def Info: images/turret1.png used on input line 216.
 (pdftex.def)             Requested size: 155.24895pt x 74.05676pt.
- <images/turret2.png, id=194, 1278.7775pt x 634.37pt>
+ <images/turret2.png, id=202, 1278.7775pt x 634.37pt>
 File: images/turret2.png Graphic file (type png)
 
 <use images/turret2.png>
-Package pdftex.def Info: images/turret2.png used on input line 185.
+Package pdftex.def Info: images/turret2.png used on input line 221.
 (pdftex.def)             Requested size: 155.24895pt x 77.01164pt.
- [9 <./images/evidencedModel2.png> <./images/evidencedModel9.png> <./images/evi
-dencedModel4.png> <./images/evidencedModel11.png> <./images/turret1.png> <./ima
-ges/turret2.png>]
-<diagrams/turretChart.png, id=205, 761.84625pt x 550.055pt>
+ [10 <./images/evidencedModel2.png> <./images/evidencedModel9.png> <./images/ev
+idencedModel4.png> <./images/evidencedModel11.png> <./images/turret1.png> <./im
+ages/turret2.png>]
+<diagrams/turretChart.png, id=215, 761.84625pt x 550.055pt>
 File: diagrams/turretChart.png Graphic file (type png)
 
 <use diagrams/turretChart.png>
-Package pdftex.def Info: diagrams/turretChart.png used on input line 211.
+Package pdftex.def Info: diagrams/turretChart.png used on input line 246.
 (pdftex.def)             Requested size: 265.65147pt x 191.80032pt.
 
-<diagrams/turretChartRot.png, id=207, 761.84625pt x 556.0775pt>
+<diagrams/turretChartRot.png, id=217, 761.84625pt x 556.0775pt>
 File: diagrams/turretChartRot.png Graphic file (type png)
 
 <use diagrams/turretChartRot.png>
-Package pdftex.def Info: diagrams/turretChartRot.png used on input line 216.
+Package pdftex.def Info: diagrams/turretChartRot.png used on input line 251.
 (pdftex.def)             Requested size: 265.65147pt x 193.90031pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 209--218
+Underfull \hbox (badness 10000) in paragraph at lines 244--253
 [][]
  []
 
-[10] [11 <./diagrams/turretChart.png> <./diagrams/turretChartRot.png>]
-<images/boundingBoxes.png, id=227, 1276.77pt x 661.47125pt>
+[11] [12 <./diagrams/turretChart.png> <./diagrams/turretChartRot.png>]
+<images/boundingBoxes.png, id=237, 1276.77pt x 661.47125pt>
 File: images/boundingBoxes.png Graphic file (type png)
 
 <use images/boundingBoxes.png>
-Package pdftex.def Info: images/boundingBoxes.png used on input line 235.
+Package pdftex.def Info: images/boundingBoxes.png used on input line 268.
 (pdftex.def)             Requested size: 172.5pt x 89.36542pt.
 
-<images/boundingBoxes2.png, id=228, 1267.73625pt x 667.49374pt>
+<images/boundingBoxes2.png, id=238, 1267.73625pt x 667.49374pt>
 File: images/boundingBoxes2.png Graphic file (type png)
 
 <use images/boundingBoxes2.png>
-Package pdftex.def Info: images/boundingBoxes2.png used on input line 240.
+Package pdftex.def Info: images/boundingBoxes2.png used on input line 273.
 (pdftex.def)             Requested size: 172.5pt x 90.82072pt.
 
-Overfull \hbox (2.22221pt too wide) in paragraph at lines 233--242
+Overfull \hbox (2.22221pt too wide) in paragraph at lines 266--275
 [][]  [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 253--254
+Underfull \hbox (badness 10000) in paragraph at lines 286--287
 
  []
 
-[12 <./images/boundingBoxes.png> <./images/boundingBoxes2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 256--262
+[13 <./images/boundingBoxes.png> <./images/boundingBoxes2.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 289--295
 
  []
 
-[13]
-Underfull \hbox (badness 10000) in paragraph at lines 273--274
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 306--307
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 275--277
+Underfull \hbox (badness 10000) in paragraph at lines 308--310
 
  []
 
-[14] <images/cannonBall2.png, id=251, 1278.7775pt x 672.5125pt>
+<images/cannonBall2.png, id=257, 1278.7775pt x 672.5125pt>
 File: images/cannonBall2.png Graphic file (type png)
 
 <use images/cannonBall2.png>
-Package pdftex.def Info: images/cannonBall2.png used on input line 281.
+Package pdftex.def Info: images/cannonBall2.png used on input line 314.
 (pdftex.def)             Requested size: 341.43306pt x 179.55923pt.
- [15 <./images/cannonBall2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 298--299
+ [15] [16 <./images/cannonBall2.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 331--332
 
  []
 
-<images/machineGun.png, id=259, 1278.7775pt x 621.32124pt>
+<images/machineGun.png, id=269, 1278.7775pt x 621.32124pt>
 File: images/machineGun.png Graphic file (type png)
 
 <use images/machineGun.png>
-Package pdftex.def Info: images/machineGun.png used on input line 303.
+Package pdftex.def Info: images/machineGun.png used on input line 336.
 (pdftex.def)             Requested size: 341.43306pt x 165.8913pt.
- [16 <./images/machineGun.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 325--327
+ [17 <./images/machineGun.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 358--360
 
  []
 
-[17]
-Underfull \hbox (badness 10000) in paragraph at lines 340--342
+[18]
+Underfull \hbox (badness 10000) in paragraph at lines 374--376
 
  []
 
-<diagrams/chart.png, id=272, 778.91pt x 708.6475pt>
+<diagrams/chart.png, id=282, 778.91pt x 708.6475pt>
 File: diagrams/chart.png Graphic file (type png)
  <use diagrams/chart.png>
-Package pdftex.def Info: diagrams/chart.png used on input line 348.
+Package pdftex.def Info: diagrams/chart.png used on input line 382.
 (pdftex.def)             Requested size: 207.0021pt x 188.32053pt.
 
-<diagrams/chartFirstRot.png, id=273, 787.94376pt x 708.6475pt>
+<diagrams/chartFirstRot.png, id=283, 801.99625pt x 708.6475pt>
 File: diagrams/chartFirstRot.png Graphic file (type png)
 
 <use diagrams/chartFirstRot.png>
-Package pdftex.def Info: diagrams/chartFirstRot.png used on input line 353.
-(pdftex.def)             Requested size: 207.0021pt x 186.16873pt.
+Package pdftex.def Info: diagrams/chartFirstRot.png used on input line 387.
+(pdftex.def)             Requested size: 207.0021pt x 182.90318pt.
 
-<diagrams/chartSecondRot.png, id=274, 768.8725pt x 708.6475pt>
+<diagrams/chartSecondRot.png, id=284, 768.8725pt x 708.6475pt>
 File: diagrams/chartSecondRot.png Graphic file (type png)
 
 <use diagrams/chartSecondRot.png>
-Package pdftex.def Info: diagrams/chartSecondRot.png used on input line 357.
+Package pdftex.def Info: diagrams/chartSecondRot.png used on input line 391.
 (pdftex.def)             Requested size: 207.0021pt x 190.78592pt.
 
-Overfull \hbox (71.22643pt too wide) in paragraph at lines 346--359
+Overfull \hbox (71.22643pt too wide) in paragraph at lines 380--393
 [][]  []
  []
 
-[18] [19 <./diagrams/chart.png> <./diagrams/chartFirstRot.png> <./diagrams/char
-tSecondRot.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 378--379
+[19] [20 <./diagrams/chart.png> <./diagrams/chartFirstRot.png> <./diagrams/char
+tSecondRot.png>] [21]
+Underfull \hbox (badness 10000) in paragraph at lines 425--426
 
  []
 
-<images/game.png, id=290, 984.67876pt x 459.7175pt>
+<images/game.png, id=304, 984.67876pt x 459.7175pt>
 File: images/game.png Graphic file (type png)
  <use images/game.png>
-Package pdftex.def Info: images/game.png used on input line 382.
+Package pdftex.def Info: images/game.png used on input line 429.
 (pdftex.def)             Requested size: 341.43306pt x 159.40237pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 443.
 
-[20]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 396.
- [21 <./images/game.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 396.
+[22 <./images/game.png>] [23]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 443.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 396.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 396.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 443.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 443.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 61CB959376D997A7880666E623F35F8D;1576.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 396.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 443.
  ) 
 Here is how much of TeX's memory you used:
- 6335 strings out of 494910
- 90826 string characters out of 6179837
- 179479 words of memory out of 5000000
- 9463 multiletter control sequences out of 15000+600000
+ 6361 strings out of 494910
+ 91316 string characters out of 6179837
+ 180619 words of memory out of 5000000
+ 9481 multiletter control sequences out of 15000+600000
  10505 words of font info for 38 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 29i,8n,28p,1322b,386s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,8n,28p,1340b,388s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texli
@@ -937,10 +953,10 @@ sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb></usr/share/texlive/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on report.pdf (21 pages, 2019194 bytes).
+Output written on report.pdf (23 pages, 2161757 bytes).
 PDF statistics:
- 370 PDF objects out of 1000 (max. 8388607)
- 298 compressed objects within 3 object streams
- 75 named destinations out of 1000 (max. 500000)
- 326 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 386 PDF objects out of 1000 (max. 8388607)
+ 307 compressed objects within 4 object streams
+ 79 named destinations out of 1000 (max. 500000)
+ 346 words of extra memory for PDF output out of 10000 (max. 10000000)
 

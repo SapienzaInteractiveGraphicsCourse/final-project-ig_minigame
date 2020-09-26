@@ -382,7 +382,7 @@ var createSkyBox = function (scene) {
 
     
     skybox.material = skyboxMaterial;
-   
+    
     return;
 }
 
@@ -762,7 +762,7 @@ var createLootBoxes = function (scene) {
         }
     }
 
-    //This render the skybox. Actually it is nonsese to be placed here but otherwise it wont be rendered.
+    //This render the skybox. Leave this code here for rendering purposes.
     var newLootBox =  {
         position:new BABYLON.Vector3(0,0,0),
         index: 10,
@@ -865,4 +865,28 @@ var animateLootBoxes = function(scene,box){
 
     return;
     
+}
+
+
+
+
+
+
+
+/**
+ * 
+ * @param {BABYLON.Scene} scene the scene object.  
+*/
+var createSceneObjects = function(scene){
+    if(!scene && scene != Game.scenes[Game.activeScene])
+        return; 
+
+    
+    var mySphere = BABYLON.MeshBuilder.CreateSphere("scenarioScene", {diameter: 200}, scene);
+    var spherePosition = new BABYLON.Vector3(0,200,0);
+    mySphere.position = spherePosition;
+
+    return;
+
+
 }

@@ -901,7 +901,7 @@ class Tank {
 
                 //Do not freeze the tank is neither W nor S are pressed.
                 if (!WASD_handler.isWPressed && !WASD_handler.isSPressed) {
-                   this.slowDown(0.2);
+                    this.slowDown(0.2);
                 }
             }
         }
@@ -923,9 +923,9 @@ class Tank {
      * @param {*} slowDownCutoff 
     */
     slowDown(slowDownParameter, slowDownCutoff = 0.2) {
-        
-        if(!this.bounder) return;
-        
+
+        if (!this.bounder) return;
+
         if (slowDownParameter < 0) {
             var slowDownParameter = Math.abs(slowDownParameter);
         }
@@ -1587,13 +1587,46 @@ class Tank {
 
         var tank = this;
 
-        var pickInfo = scene.pickWithRay(ray, function (mesh) {
-            if (mesh.name == tank.name || mesh.name.startsWith('bounder')
-                || mesh.name.startsWith('CannonBall') || mesh.name.startsWith('HitBounder')
-                || mesh.name.startsWith('lootBox') || mesh.name.startsWith('skybox')) return false;
-            else
-                return true;
-        });
+
+
+
+
+        if (this.team == 'red') {
+
+            /**
+             * A boolean condition that filters the meshes picked by the yellow ray (meshes that satisfies the
+             * condition are ignored, others are considered by the ray). This is done to avoid blue tanks
+             * to make friendly fire when using the machine gun. 
+            */
+
+
+            var pickInfo = scene.pickWithRay(ray, function (mesh) {
+                if (mesh.name == tank.name || mesh.name.startsWith('bounder')
+                    || mesh.name.startsWith('CannonBall') || mesh.name.startsWith('HitBounder')
+                    || mesh.name.startsWith('lootBox') || mesh.name.startsWith('skybox')) return false;
+                else
+                    return true;
+            });
+        }
+
+        else if (this.team == 'blue') {
+
+            /**
+             * A boolean condition that filters the meshes picked by the yellow ray (meshes that satisfies the
+             * condition are ignored, others are considered by the ray). This is done to avoid blue tanks
+             * to make friendly fire when using the machine gun. 
+            */
+
+            var pickInfo = scene.pickWithRay(ray, function (mesh) {
+                if (mesh.name == tank.name || mesh.name.startsWith('bounder')
+                    || mesh.name.startsWith('CannonBall') || mesh.name.startsWith('HitBounder')
+                    || mesh.name.startsWith('lootBox') || mesh.name.startsWith('skybox')
+                    || mesh.name.startsWith('clone')) return false;
+                else
+                    return true;
+            });
+
+        }
 
 
 
@@ -1848,8 +1881,7 @@ class Tank {
 
 
             this.tankStatus.machineGunBullets = this.tankStatus.machineGunBullets + Math.floor(quantity);
-            console.log(this.tankStatus.machineGunBullets);
-
+           
             /**
              * If the count goes below zero, we will adjust this count to zero: it means
              * that the tank has run out of machine gun bullets. 
@@ -2275,6 +2307,10 @@ class Tank {
         var scene = this.scene;
 
         var body = this.getBody();
+        if (!body) return;
+
+
+
         var bodyMaterial = new BABYLON.StandardMaterial("bodyMaterial".concat(this.id.toString()), scene);
         bodyMaterial.diffuseColor = new BABYLON.Color3.Blue;
 

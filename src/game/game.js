@@ -111,7 +111,7 @@ Game.activeScene = MAIN_MENU_SCENE_VALUE;
 
 
 //Set the rendering speed of the game
-Game.renderingSpeed = 350;
+Game.renderingSpeed = 500;
 
 
 document.addEventListener('DOMContentLoaded', startGame);
@@ -165,10 +165,10 @@ var startWinMenu = function(){
     Game.scenes[Game.activeScene] = createDeathMenu(engine);
 
 
+    //Restore the win condition global boolean variable to false.
+    winningCondition = false;
     var scene = Game.scenes[Game.activeScene];
-    engine.runRenderLoop(function () {
-        scene.render();
-    })
+    scene.assetsManager.load();
 }
 
 
@@ -437,6 +437,10 @@ var createFirstScenario = function () {
 
     //Create a set of textblocks using BABYLON GUI to display information of the game status.
     createInGameGUI(scene);
+    
+
+    //Create a series of objects that populates the scene.
+    //createSceneObjects(scene);
 
 
 

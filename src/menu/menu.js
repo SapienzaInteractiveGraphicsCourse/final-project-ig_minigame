@@ -184,7 +184,16 @@ var mainMenu = function (engine) {
     var slider = new BABYLON.GUI.Slider();
     slider.minimum = 1;
     slider.maximum = 2;
-    slider.value = 1;
+
+
+    if(difficulty == 'easy')
+        slider.value = 1;
+    else
+        slider.value = 2;
+        
+
+
+
 
     slider.step = 1;
     slider.height = "20px";
@@ -198,7 +207,12 @@ var mainMenu = function (engine) {
 
 
     var header = new BABYLON.GUI.TextBlock();
-    header.text = "Difficulty: easy";
+
+    if(difficulty == 'easy')
+        header.text = "Difficulty: easy";
+    else
+        header.text = "Difficulty: hard";
+
     header.height = "30px";
     header.color = "white";
     panel.addControl(header);
