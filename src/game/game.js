@@ -162,11 +162,12 @@ var startDeathMenu = function () {
 var startWinMenu = function(){
 
     Game.activeScene = DEATH_MENU_SCENE_VALUE;
+    winningCondition = false;
     Game.scenes[Game.activeScene] = createDeathMenu(engine);
 
 
     //Restore the win condition global boolean variable to false.
-    winningCondition = false;
+  
     var scene = Game.scenes[Game.activeScene];
     scene.assetsManager.load();
 }
