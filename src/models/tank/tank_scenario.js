@@ -14,10 +14,10 @@
 
 /**
  * Callback function that is called when the tank model contained in the .babylon file is imported.
- * @param {*} newMeshes 
- * @param {*} particleSystem 
- * @param {*} skeletons 
- * @param {*} objectPosition 
+ * @param {Array} newMeshes an array of meshes that represent the imported models.
+ * @param {BABYLON.ParticleSystem} particleSystem  the object representing the imported model particle system.
+ * @param {Object} skeletons the imported model skeletons, used to import animations (NOT USED).
+ * @param {BABYLON.Vector3} objectPosition a three dimensional vector representing the imported model spawn position 
  */
 var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosition) {
 
@@ -135,7 +135,11 @@ var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosit
     }
 
 
-    //Set up the spawn points for the tank main menu.
+    
+    /**
+     * Create the two tank models for the main menu, and animate them using key frame animations.
+     * There will be exactly two tanks, one red and one blue.
+    */
     else if (Game.activeScene == MAIN_MENU_SCENE_VALUE) {
         var tank = new Tank(newMeshes, root, scene, -1, 1, newMeshes[0].name, 'red', false);
 
@@ -180,7 +184,10 @@ var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosit
     }
 
 
-
+    /**
+     * Create the two tank models for the end menu, and animate them using key frame animations.
+     * If the player has won the game, these two tanks will be red, otherwise they will be blue.
+    */
     else if (Game.activeScene == END_MENU_SCENE_VALUE) {
         
         
@@ -253,9 +260,11 @@ var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosit
 
 
 /**
- * 
- * @param {*} scene 
- * @param {*} tank 
+ * This object istantiates the third person crosshair. We use a simple method to load the crosshair.
+ * First we istantiate a box mesh in front of the player tank, attach a texture to it (it must be 
+ * a .png file) and set the texture transparency to true.
+ * @param {BABYLON.Scene} scene the object representing the scene.
+ * @param {BABYLON.Mesh} tank the object representing the root mesh of the tank.
 */
 
 var loadTankCrosshair = function (scene, tank) {

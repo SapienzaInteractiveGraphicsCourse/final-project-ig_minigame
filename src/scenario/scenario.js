@@ -6,8 +6,7 @@
  * This js file contains all the functions that loads scenario elements: build grounds, scenario 
  * objects, buildings (future work) etc...
  * 
- */
-
+*/
 function playGameMusicCallback(){
 
     if(soundEnabled)
@@ -150,7 +149,7 @@ var loadSounds = function (scene) {
     binaryTask = scene.assetsManager.addBinaryFileTask("gameMusic", "sounds/game-music.wav");
 
 
-    //To repeat the sound whenever it finishes.
+    //To load the in game music.
     binaryTask.onSuccess = function (task) {
         scene.assets["gameMusic"] = new BABYLON.Sound("gameMusic", task.data, scene, playGameMusicCallback,
             { loop: true,
@@ -465,25 +464,6 @@ var createFollowCamera = function (scene, target, followCameraProperties, name =
 
 
 
-
-
-
-//https://doc.babylonjs.com/how_to/skybox
-var createSkyBox = function (scene) {
-    var skybox = new  BABYLON.Mesh.CreateBox("skyBox", 45, scene);
-    var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
-    skyboxMaterial.backFaceCulling = false;
-    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/cubeTextures/skybox/skybox", scene);
-    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-    skyboxMaterial.emissiveColor = new BABYLON.Color3(1,0,0);
-
-    
-    skybox.material = skyboxMaterial;
-    
-    return;
-}
 
 
 
@@ -970,40 +950,3 @@ var animateLootBoxes = function(scene,box){
 
 
 
-
-
-/**
- * 
- * @param {BABYLON.Scene} scene the scene object.  
-*/
-var createSceneObjects = function(scene){
-    if(!scene && scene != Game.scenes[Game.activeScene])
-        return; 
-
-    
-    var sceneSphere = BABYLON.MeshBuilder.CreateSphere("scenarioScene", {diameter: 200}, scene);
-    var spherePosition = new BABYLON.Vector3(0,200,0);
-    sceneSphere.position = spherePosition;
-
-
-    var sphereMaterial  = new BABYLON.StandardMaterial("sphereMaterial",scene);
-   
-    sceneSphere.material = sphereMaterial;
-
-    sphereMaterial.specularColor = new BABYLON.Color3.Black;
-
-    scene.lights[1].parent = sceneSphere;
-
-
-    
-
-    scene.theSphere = sceneSphere;
-    
-    
-
-
-   
-    return;
-
-
-}

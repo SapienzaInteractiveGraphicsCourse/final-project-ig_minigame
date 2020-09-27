@@ -2,24 +2,22 @@
 
 
 
-
 /**
- * If you want to build a FPS like game, a first person shooter, you need to define a free camera.
- * To avoid collisions with object you define an ellipsoid like figure with the position of the camera on top of 
- * the ellipsoid. This is done to define an area that will determine the collisions. If the radius of the ellipsoid is 
- * 2 the the height of the camera is 4. 
- * Ellipsoid offset determine how close to the ground is the camera.
+ * This function imports the models used for the scene from the .babylon files. The model import routine
+ * is carried using the scene assets manager to be sure that, when the scene is rendered all the tank models are 
+ * properly loaded.
+ * @param {Array of strings} model_names the array of strings specifying the names of all the models to be imported.
+ * @param {String} model_root_dir the root directory of the model. This field specifies the directory in which is contained
+ *                                 the .babylon file (specified in babylon_file_name).
+ * @param {String} babylon_file_name the name of the .babylon file in the directory.
+ * @param {BABYLON.Scene} scene the object representing the scene.
+ * @param {BABYLON.Vector3} position a three dimensional vector representing the spawn position of the imported model. 
+ * @param {String} modelType  a string specifying the type of model to be imported  
  */
-
-
-
 var importModel = function (model_names, model_root_dir, babylon_file_name, scene, position, modelType) {
 
 
     //https://doc.babylonjs.com/api/classes/babylon.sceneloader
-    //Import meshes into a scene.
-
-    //Load dudes using assets manager.
 
 
 
@@ -29,14 +27,14 @@ var importModel = function (model_names, model_root_dir, babylon_file_name, scen
      */
 
 
-    if(!scene.assetsManager) return;
+    if (!scene.assetsManager) return;
 
     var meshTask = scene.assetsManager.addMeshTask("MeshesTask", model_names, model_root_dir, babylon_file_name);
-   
+
     var object_pos = position;
     meshTask.onSuccess = function (task) {
         //In task.loadedSkeletons there are the skeletons
-       
+
         onModelImported(task.loadedMeshes, task.loadedParticleSystems, task.loadedSkeletons, modelType);
     }
 
@@ -67,19 +65,6 @@ var importModel = function (model_names, model_root_dir, babylon_file_name, scen
 }
 
 
-
-
-/**
- * Create a clone function that is responsible to clone models.
- * Models might have children so we have to clone them as well.
- * 
- * 
- * if(skeletons.length == 1) We have a single skeleton for all children
- * 
- * 
- * //Most probably each child has its own skeleton.
- * 
- */
 
 
 

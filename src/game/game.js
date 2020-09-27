@@ -87,6 +87,8 @@ var MAX_NUM_TANK_HARD = 4;
 
 
 
+
+//Boolean flag variables used to regulate access to these arrays.
 var managing_blueTanksArray = false;
 var managing_redTanksArray = false;
 
@@ -121,6 +123,10 @@ document.addEventListener('DOMContentLoaded', startGame);
 //moveWithCollision = move the mesh according to the collision engine.
 
 
+/**
+ * The first function that is called. It starts the environment and the 
+ * first scene in the game. 
+*/
 function startGame() {
     canvas = document.getElementById('renderCanvas');
     canvas.width = window.innerWidth;
@@ -139,6 +145,11 @@ function startGame() {
 
 }
 
+
+/**
+ * This function create the main menu of the game.
+ * @param {BABYLON.Engine} engine an object representing the engine.
+*/
 var createMainMenu = function (engine) {
     return mainMenu(engine);
 }
@@ -146,10 +157,19 @@ var createMainMenu = function (engine) {
 
 
 
+/**
+ * This function creates the end menu of the game.
+ * @param {BABYLON.Engine} engine an object representing the engine.
+*/
 var createEndMenu = function (engine) {
     return endMenu(engine);
 }
 
+
+
+/**
+ * This function starts the death menu. It is triggered when the player tank dies. 
+*/
 var startDeathMenu = function () {
     Game.scenes[Game.activeScene] = createEndMenu(engine);
 
@@ -159,6 +179,12 @@ var startDeathMenu = function () {
 }
 
 
+
+
+/**
+ * This function creates the win menu. It is triggered when the player collects enough points 
+ * to win the game. 
+*/
 var startWinMenu = function () {
 
     Game.activeScene = END_MENU_SCENE_VALUE;
@@ -177,6 +203,11 @@ var startWinMenu = function () {
 
 
 
+/**
+ * This function check the if the player tank has collected enough points to win the game.
+ * It is called repeatedly in each render loop.
+ * @param {BABYLON.Scene} scene an object representing the scene.
+*/
 var checkWinCondition = function (scene) {
     //Move completely to another scene.
 
@@ -241,6 +272,10 @@ var checkWinCondition = function (scene) {
 
 
 
+/**
+ * This function starts the main menu of the game. It creates the scene, configure its assets
+ * manager and create the main menu. 
+*/
 var startMenu = function () {
     Game.activeScene = MAIN_MENU_SCENE_VALUE;
     Game.scenes[Game.activeScene] = createMainMenu(engine);
@@ -268,7 +303,10 @@ var startMenu = function () {
 
 
 
-
+/**
+ * This function creates the first level scene, creates the loot boxes the 
+ * appropriate triggers for the loot boxes. 
+*/
 var startFirstScene = function () {
 
 
@@ -340,7 +378,11 @@ var startFirstScene = function () {
 
 
 
-
+/**
+ * This function updates the in game GUI, which is visible in the top left corner
+ * of the canvas. The values are read from the object heroTank.tankStatus.
+ * @param {BABYLON.Scene} scene the object representing the scene.
+*/
 var updateInGameGUI = function (scene) {
 
     //Some sanity checks
@@ -455,12 +497,12 @@ var createInGameGUI = function (scene) {
 
 
 
-
-
+/**
+ * This function creates the scene object for the main level, import the models, 
+ * create the scene assets manager, the in game GUI, enable all the event listeners
+ * for the keyboard buttons (to enable WASD movement) and the mouse button to enable shooting. 
+*/
 var createFirstScenario = function () {
-
-
-
 
     scene = new BABYLON.Scene(engine);
     scene.enablePhysics();
