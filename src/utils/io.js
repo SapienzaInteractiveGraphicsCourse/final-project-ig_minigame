@@ -333,6 +333,17 @@ var enableKeyEventListeners= function(){
                     document.exitPointerLock();
 
 
+
+                //Stop playing the game music
+                if(soundEnabled){
+                    if(scene.assets){
+                        if(scene.assets['gameMusic']){
+                            scene.assets['gameMusic'].stop();
+                        }
+                    }
+                }
+
+
                 if(Game.activeScene == 1){
 
 

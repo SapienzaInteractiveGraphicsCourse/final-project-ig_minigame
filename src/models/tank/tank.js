@@ -1110,10 +1110,16 @@ class Tank {
 
 
         //Need to fix the behaviour of the cannon ball. It can't always fire.
-        setTimeout(function () {
-            tank.canFireCannonBall = true;
-        }, Tank.CANNON_BALL_TIMEOUT);
-
+        if (Game.activeScene == FIRST_LEVEL_SCENE_VALUE) {
+            setTimeout(function () {
+                tank.canFireCannonBall = true;
+            }, Tank.CANNON_BALL_TIMEOUT);
+        }
+        else if (Game.activeScene == MAIN_MENU_SCENE_VALUE || Game.activeScene == END_MENU_SCENE_VALUE) {
+            setTimeout(function () {
+                tank.canFireCannonBall = true;
+            }, Tank.CANNON_BALL_TIMEOUT + 4000);
+        }
 
 
         /** Define a set of offsets that serves the purpose of rendering the ball
@@ -1127,7 +1133,9 @@ class Tank {
 
 
         //Get the absolute position of the cannon to spawn the cannonball.
-        var pos = this.getCannon().getAbsolutePosition();
+        var cannon = this.getCannon();
+        if (!cannon) return;
+        var pos = cannon.getAbsolutePosition();
 
 
 
@@ -1166,8 +1174,8 @@ class Tank {
         cannonBall.physicsImpostor.applyImpulse(force, cannonBall.getAbsolutePosition());
 
 
-        //Play the sound of firing cannon ball
-        if (soundEnabled)
+        //Play the sound of firing cannon ball  if and only if we are in the main level scenario.
+        if (soundEnabled && Game.activeScene == FIRST_LEVEL_SCENE_VALUE)
             scene.assets["cannonSound"].play();
 
 
@@ -1384,7 +1392,7 @@ class Tank {
 
 
                         if (scene.assets) {
-                            if (soundEnabled)
+                            if (soundEnabled && Game.activeScene == FIRST_LEVEL_SCENE_VALUE)
                                 scene.assets['explosionSound'].play();
                         }
 
@@ -1463,7 +1471,6 @@ class Tank {
 
         //Check wheter the given scene is correct.
         if (scene != Game.scenes[Game.activeScene]) {
-            console.log("Error in fireGun: the given scene is not the currently rendered one");
             return;
         }
 
@@ -1659,7 +1666,7 @@ class Tank {
 
                 var pickedTank = pickedMeshParent.Tank;
                 if (!pickedTank) {
-                    console.log(pickedMeshParent.name);
+                    //console.log(pickedMeshParent.name);
                     return;
                 }
 
@@ -1881,7 +1888,7 @@ class Tank {
 
 
             this.tankStatus.machineGunBullets = this.tankStatus.machineGunBullets + Math.floor(quantity);
-           
+
             /**
              * If the count goes below zero, we will adjust this count to zero: it means
              * that the tank has run out of machine gun bullets. 
@@ -2257,6 +2264,8 @@ class Tank {
         var body = this.getBody();
         var bodyMaterial = new BABYLON.StandardMaterial("bodyMaterial".concat(this.id.toString()), scene);
         bodyMaterial.diffuseColor = new BABYLON.Color3.Red;
+        //bodyMaterial.specularColor = new BABYLON.Color3.Black;
+
 
         body.material = bodyMaterial;
 
@@ -2313,6 +2322,7 @@ class Tank {
 
         var bodyMaterial = new BABYLON.StandardMaterial("bodyMaterial".concat(this.id.toString()), scene);
         bodyMaterial.diffuseColor = new BABYLON.Color3.Blue;
+        //bodyMaterial.specularColor = new BABYLON.Color3.Black;
 
         body.material = bodyMaterial;
 
@@ -2551,13 +2561,24 @@ class Tank {
 
         var scene = Game.scenes[Game.activeScene];
 
-        Game.activeScene = DEATH_MENU_SCENE_VALUE;
+        Game.activeScene = END_MENU_SCENE_VALUE;
+        //Stop playing the game music
+        if (soundEnabled) {
+            if (scene.assets) {
+                if (scene.assets['gameMusic']) {
+                    scene.assets['gameMusic'].stop();
+                }
+            }
+        }
 
         scene.dispose();
 
 
         //Free the user from the pointer lock
         document.exitPointerLock();
+
+
+
 
 
         //Render the death menu

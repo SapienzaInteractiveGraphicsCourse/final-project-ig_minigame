@@ -13,10 +13,6 @@ The game is a simple third person arena game in which the player tank and the bl
 The arena is a simple flat map in which the tanks are able to move. Both the player tank and the opponent team can shoot with two weapons: the cannon and the machine gun. The player tank is also able to restore life points, to collect cannon and machine gun bullets from the loot boxes that float in certain positions of the map.
  <div class="row">
   <div class="column">
-    <img src="report/images/health.png" width = "25%" height = "25%">
-  </div>
-
-  <div class="column">
     <img src="report/images/cannonball.png"   width = "25%" height = "25%">
   </div>
 </div> 
@@ -49,6 +45,12 @@ The player will face an opponent team of blue tanks that have the only purpose o
 
 
 ## Play the game
+
+### Objective
+* In easy mode collect 5 points to win.
+* In hard mode collect 10 points to win.
+
+
 Go to this link to play the game
 
 https://sapienzainteractivegraphicscourse.github.io/final-project-ig_minigame/

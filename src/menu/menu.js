@@ -77,7 +77,7 @@ var mainMenu = function (engine) {
 
     //Define the title container and some properties.
     var title = new BABYLON.GUI.TextBlock();
-    title.text = "Interactive Graphics MiniGame \nPress Start Game to play";
+    title.text = "Interactive Graphics MiniGame \nPress Start Game to play\nPress Disable/Enable sound to disable/enable music";
     title.height = "80px";
     title.color = "white";
     title.style = style
@@ -147,6 +147,10 @@ var mainMenu = function (engine) {
     buttonSound.height = "90px";
     buttonSound.paddingBottom = "40px";
 
+    if(soundEnabled)
+        buttonSound.textBlock.text = 'Disable sound';
+    else
+        buttonSound.textBlock.text = 'Enable sound';
 
 
     //This listener will be triggered when the button is clicked (actually when the mouse "unpick" the object).
@@ -190,7 +194,7 @@ var mainMenu = function (engine) {
         slider.value = 1;
     else
         slider.value = 2;
-        
+
 
 
 
@@ -284,7 +288,7 @@ var mainMenu = function (engine) {
  * This function is inspired from the playoground Taken from the documentation: https://www.babylonjs-playground.com/#XCPP9Y#121
  * @param {BABYLON.Engine} engine the object representing the scene.
 */
-var deathMenu = function (engine) {
+var endMenu = function (engine) {
     // This creates a basic Babylon Scene object (non-mesh)
     var scene = new BABYLON.Scene(engine);
 

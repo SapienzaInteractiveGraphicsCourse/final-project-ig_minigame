@@ -76,7 +76,7 @@ var NUM_LOOTBOXES_HARD = 6;
 //Constant values that will map each of the different scenes in the game.
 var MAIN_MENU_SCENE_VALUE = 0;
 var FIRST_LEVEL_SCENE_VALUE = 1;
-var DEATH_MENU_SCENE_VALUE = 2;
+var END_MENU_SCENE_VALUE = 2;
 
 
 
@@ -146,12 +146,12 @@ var createMainMenu = function (engine) {
 
 
 
-var createDeathMenu = function (engine) {
-    return deathMenu(engine);
+var createEndMenu = function (engine) {
+    return endMenu(engine);
 }
 
 var startDeathMenu = function () {
-    Game.scenes[Game.activeScene] = createDeathMenu(engine);
+    Game.scenes[Game.activeScene] = createEndMenu(engine);
 
 
     var scene = Game.scenes[Game.activeScene];
@@ -159,15 +159,15 @@ var startDeathMenu = function () {
 }
 
 
-var startWinMenu = function(){
+var startWinMenu = function () {
 
-    Game.activeScene = DEATH_MENU_SCENE_VALUE;
-    winningCondition = false;
-    Game.scenes[Game.activeScene] = createDeathMenu(engine);
+    Game.activeScene = END_MENU_SCENE_VALUE;
+
+    Game.scenes[Game.activeScene] = createEndMenu(engine);
+   
 
 
-    //Restore the win condition global boolean variable to false.
-  
+
     var scene = Game.scenes[Game.activeScene];
     scene.assetsManager.load();
 }
@@ -177,35 +177,54 @@ var startWinMenu = function(){
 
 
 
-var checkWinCondition = function(scene){
-      //Move completely to another scene.
+var checkWinCondition = function (scene) {
+    //Move completely to another scene.
 
-      if(scene != Game.scenes[Game.activeScene]) return;
+    if (scene != Game.scenes[Game.activeScene]) return;
 
-    
-      if(!scene.heroTank) return;
-      var heroTank = scene.heroTank;
 
-    
-      var pointWinningCondition;
-      if(difficulty == 'easy')
+    if (!scene.heroTank) return;
+    var heroTank = scene.heroTank;
+
+
+    var pointWinningCondition;
+    if (difficulty == 'easy')
         pointWinningCondition = EASY_POINT_WINNING_CONDITION;
-      else if(difficulty == 'hard')
+    else if (difficulty == 'hard')
         pointWinningCondition = HARD_POINT_WINNING_CONDITION;
 
 
 
 
 
-      if(heroTank.tankStatus.points >= pointWinningCondition){
-       
+    if (heroTank.tankStatus.points >= pointWinningCondition) {
+
         engine.stopRenderLoop();
+
+
+
+        //Exit the pointer lock
+        if(scene.arleadyLocked)
+            document.exitPointerLock();
+
 
         var scene = Game.scenes[Game.activeScene];
 
-        Game.activeScene = DEATH_MENU_SCENE_VALUE;
+        Game.activeScene = END_MENU_SCENE_VALUE;
+
+
+        //Stop playing the game music
+        if (soundEnabled) {
+            if (scene.assets) {
+                if (scene.assets['gameMusic']) {
+                    scene.assets['gameMusic'].stop();
+                }
+            }
+        }
 
         scene.dispose();
+
+
 
 
         //Set the win condition = true to display the win menu.
@@ -215,8 +234,8 @@ var checkWinCondition = function(scene){
 
         //Render the death menu
         startWinMenu();
-      }
-      return;
+    }
+    return;
 }
 
 
@@ -228,6 +247,11 @@ var startMenu = function () {
 
 
     var scene = Game.scenes[Game.activeScene];
+
+
+    //Enable the tank actions for the main menu.
+    enableTankAction();
+    scene.enablePhysics();
 
 
 
@@ -268,16 +292,20 @@ var startFirstScene = function () {
 
     scene.collisionsEnabled = true;
 
-
     scene.toRender = function () {
 
+
+
         //Slow down the game
-        setTimeout(function(){
+        setTimeout(function () {
             //Enable tank movement when rendering the scene.
             var heroTank = scene.heroTank;
-            
+
+
+
+
             //If the scene is freezed for debugging purposes, the tanks must not move.
-            if(!isSceneFreezed){
+            if (!isSceneFreezed) {
                 startTank(scene, heroTank);
 
 
@@ -290,30 +318,33 @@ var startFirstScene = function () {
 
                 //Check whether the player has won the game or not
                 checkWinCondition(scene);
+
             }
 
-        },Game.renderingSpeed);
+        }, Game.renderingSpeed);
 
         updateInGameGUI(scene);
 
 
 
-      
+
         scene.render();
 
     }
 
     scene.assetsManager.load();
+
+
 }
 
 
 
 
 
-var updateInGameGUI = function(scene){
+var updateInGameGUI = function (scene) {
 
     //Some sanity checks
-    if(!scene.pointText || !scene.healthText || !scene.machineGunText || !scene.cannonText) return;
+    if (!scene.pointText || !scene.healthText || !scene.machineGunText || !scene.cannonText) return;
 
 
     var pointText = scene.pointText;
@@ -322,17 +353,17 @@ var updateInGameGUI = function(scene){
     var cannonText = scene.cannonText;
 
 
-    if(!scene.heroTank) return;
+    if (!scene.heroTank) return;
 
-    var heroTank = scene.heroTank; 
+    var heroTank = scene.heroTank;
 
     var tankStatus = heroTank.tankStatus;
 
     pointText.text = "Points: ".concat(tankStatus.points.toString());
-    healthText.text = "Health: ".concat(tankStatus.health.toString());  
-    machineGunText.text = "Machine gun bullets: ".concat(tankStatus.machineGunBullets.toString());  
+    healthText.text = "Health: ".concat(tankStatus.health.toString());
+    machineGunText.text = "Machine gun bullets: ".concat(tankStatus.machineGunBullets.toString());
     cannonText.text = "Cannon bullets: ".concat(tankStatus.cannonBullets.toString());
-    
+
 
     return;
 }
@@ -345,12 +376,12 @@ var updateInGameGUI = function(scene){
  * @param {BABYLON.Scene} scene an object representing the scene.
  * @todo Change the style of the text in the text blocks.
  */
-var createInGameGUI = function(scene){
+var createInGameGUI = function (scene) {
 
 
     // GUI
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("In game UI");
-   
+
     var panel = new BABYLON.GUI.StackPanel();
 
 
@@ -365,7 +396,7 @@ var createInGameGUI = function(scene){
     machineGunText.text = "Machine gun bullets: ".concat("0");
     machineGunText.height = "30px";
     machineGunText.color = "green";
-    
+
 
 
     //Define the title container and some properties.
@@ -373,7 +404,7 @@ var createInGameGUI = function(scene){
     cannonText.text = "Cannon bullets: ".concat("0");
     cannonText.height = "30px";
     cannonText.color = "orange";
-    
+
 
 
     //Define the title container and some properties.
@@ -383,16 +414,16 @@ var createInGameGUI = function(scene){
     pointText.color = "yellow";
 
     cannonText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-	cannonText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-    
+    cannonText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+
     machineGunText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-	machineGunText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-    
+    machineGunText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+
     pointText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-	pointText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-    
+    pointText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+
     healthText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-	healthText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    healthText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
 
     //Add all the text block to the displayed panel.
     panel.addControl(healthText);
@@ -418,7 +449,7 @@ var createInGameGUI = function(scene){
 
 
     return;
-    
+
 
 }
 
@@ -434,14 +465,11 @@ var createFirstScenario = function () {
     scene = new BABYLON.Scene(engine);
     scene.enablePhysics();
 
-   
+
 
     //Create a set of textblocks using BABYLON GUI to display information of the game status.
     createInGameGUI(scene);
-    
 
-    //Create a series of objects that populates the scene.
-    //createSceneObjects(scene);
 
 
 
@@ -476,10 +504,23 @@ var createFirstScenario = function () {
         {
             'name': 'dir0',
             'type': 'directional',
-            'position': new BABYLON.Vector3(-1, -1, 0),
+            'position': new BABYLON.Vector3(-1, -1, -1),
+            'diffuseColor': new BABYLON.Color3.White
+        },
+        {
+            'name': 'dir1',
+            'type': 'directional',
+            'position': new BABYLON.Vector3(1, -1, 1),
+            'direction': new BABYLON.Vector3(-1, 0, 0),
             'diffuseColor': new BABYLON.Color3.White
         },
     ];
+
+
+    
+
+
+
 
     //scene.ambientColor = new BABYLON.Color3(0.3,0.76,0.3);
 
@@ -488,6 +529,17 @@ var createFirstScenario = function () {
 
     //Create lights
     createLights(scene, lights);
+
+    scene.lights[0].intensity = 0.8;
+    scene.lights[1].intensity = 0.8;
+
+
+
+
+    //Create a series of objects that populates the scene.
+    //createSceneObjects(scene);
+
+
 
 
     var freeCameraInitPos = new BABYLON.Vector3(0, 30, 0);
@@ -541,6 +593,7 @@ var createFirstScenario = function () {
 
 
 
+
     return scene;
 
 
@@ -552,8 +605,8 @@ var createFirstScenario = function () {
 
 
 window.addEventListener('resize', function () {
-  
- 
+
+
     //Executing these lines will make the canvas to cover 100% of the screen.
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;

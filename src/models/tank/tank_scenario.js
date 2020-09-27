@@ -21,16 +21,16 @@
  */
 var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosition) {
 
-    
+
     //Get the current activated scene by the global variable Game
     var scene = Game.scenes[Game.activeScene];
 
 
     var root = scene.getMeshByName('Box');
 
-    
 
-    if(Game.activeScene == FIRST_LEVEL_SCENE_VALUE){
+
+    if (Game.activeScene == FIRST_LEVEL_SCENE_VALUE) {
         var tank = new Tank(newMeshes, root, scene, -1, 4, newMeshes[0].name, 'red', false);
 
 
@@ -53,7 +53,7 @@ var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosit
         }
         */
 
-        
+
 
         /**
          * Spawn the opponent tanks (blue team tanks) on the other side of the map. The 
@@ -71,10 +71,10 @@ var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosit
 
                 //Spawn the opponent tanks in a row.
 
-                
+
                 var xPosition = 100 * Math.pow(-1, i) + 100 * i;
-                var spawnPosition = new BABYLON.Vector3(xPosition,1.8,900.52);
-                
+                var spawnPosition = new BABYLON.Vector3(xPosition, 1.8, 900.52);
+
 
                 blueTank.setSpawnPoint(spawnPosition);
                 blueTank.teleportSpawn();
@@ -98,8 +98,8 @@ var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosit
 
 
                 var xPosition = 100 * Math.pow(-1, i) + 100 * i;
-                var spawnPosition = new BABYLON.Vector3(xPosition,1.8,900.52);
-                
+                var spawnPosition = new BABYLON.Vector3(xPosition, 1.8, 900.52);
+
 
                 blueTank.setSpawnPoint(spawnPosition);
                 blueTank.teleportSpawn();
@@ -112,7 +112,7 @@ var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosit
 
         //Define the parameters of the hero tank follow camera (TPS like camera) and create the FollowCameraObject.
         var heroTankFollowCamera = {
-            'radius': 70,
+            'radius': 60,
             'heightOffset': 25,
             'rotationOffset': 0,
             'cameraAcceleration': 0.5,
@@ -136,60 +136,111 @@ var onTankImported = function (newMeshes, particleSystem, skeletons, objectPosit
 
 
     //Set up the spawn points for the tank main menu.
-    else if(Game.activeScene == MAIN_MENU_SCENE_VALUE){
+    else if (Game.activeScene == MAIN_MENU_SCENE_VALUE) {
         var tank = new Tank(newMeshes, root, scene, -1, 1, newMeshes[0].name, 'red', false);
 
-        var spawnPosition = new BABYLON.Vector3(10.0, 1.0, 13.0);
+        var spawnPosition = new BABYLON.Vector3(12.0, 1.0, 13.0);
 
-        var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0,1,0),degrees_to_radians(45));
+        var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), degrees_to_radians(45));
         tank.root.rotationQuaternion = quaternion;
 
         //Adjust the spwaning position of the tanks.
         tank.setSpawnPoint(spawnPosition);
         tank.teleportSpawn();
-        
-   
 
-        var clone = DoClone(tank.root,null,1);
 
-        var clonedTank = new Tank(clone,clone,scene,1,1,"clone_1",'blue',true);
 
-        var clonedSpawnPosition = new BABYLON.Vector3(-10.0,1.0,13.0);
-        
-        var clonedQuaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0,1,0),degrees_to_radians(315));
+        var clone = DoClone(tank.root, null, 1);
+
+        var clonedTank = new Tank(clone, clone, scene, 1, 1, "clone_1", 'blue', true);
+
+        var clonedSpawnPosition = new BABYLON.Vector3(-11.0, 1.0, 13.0);
+
+        var clonedQuaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), degrees_to_radians(315));
         clonedTank.root.rotationQuaternion = clonedQuaternion;
         //Adjust the spwaning position of the tanks.
         clonedTank.setSpawnPoint(clonedSpawnPosition);
         clonedTank.teleportSpawn();
-      
+
+
+        //This array is istantiated to build the animations for the tanks in the main menu
+        var tankArray = [];
+        tankArray.push(tank);
+        tankArray.push(clonedTank);
+
+
+
+        //Store the first created tank and the clone tank to the scene.
+        scene.firstTank = tank;
+        scene.clonedTank = clonedTank;
+
+
+        animateTankMenu(scene, tankArray);
+
     }
 
 
 
-    else if(Game.activeScene == DEATH_MENU_SCENE_VALUE){
-        var tank = new Tank(newMeshes, root, scene, -1, 1, newMeshes[0].name, 'blue', false);
+    else if (Game.activeScene == END_MENU_SCENE_VALUE) {
+        
+        
+        
+        if(winningCondition == false){
+            var tank = new Tank(newMeshes, root, scene, -1, 1, newMeshes[0].name, 'blue', false);
+
+
+            var clone = DoClone(tank.root, null, 1);
+
+            var clonedTank = new Tank(clone, clone, scene, 1, 1, "clone_1", 'blue', true);
+
+        }
+        else{
+            var tank = new Tank(newMeshes, root, scene, -1, 1, newMeshes[0].name, 'red', false);
+
+
+            var clone = DoClone(tank.root, null, 1);
+
+            var clonedTank = new Tank(clone, clone, scene, 1, 1, "clone_1", 'red', true);
+            
+            //Restore the winning condition back to false.
+            winningCondition = false;
+        }
+
 
         var spawnPosition = new BABYLON.Vector3(10.0, 1.0, 13.0);
 
-        var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0,1,0),degrees_to_radians(45));
+        var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), degrees_to_radians(45));
         tank.root.rotationQuaternion = quaternion;
 
         //Adjust the spwaning position of the tanks.
         tank.setSpawnPoint(spawnPosition);
         tank.teleportSpawn();
-        
 
-        var clone = DoClone(tank.root,null,1);
 
-        var clonedTank = new Tank(clone,clone,scene,1,1,"clone_1",'blue',true);
+        var clonedSpawnPosition = new BABYLON.Vector3(-10.0, 1.0, 13.0);
 
-        var clonedSpawnPosition = new BABYLON.Vector3(-10.0,1.0,13.0);
-        
-        var clonedQuaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0,1,0),degrees_to_radians(315));
+        var clonedQuaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), degrees_to_radians(315));
         clonedTank.root.rotationQuaternion = clonedQuaternion;
         //Adjust the spwaning position of the tanks.
         clonedTank.setSpawnPoint(clonedSpawnPosition);
         clonedTank.teleportSpawn();
+
+
+
+        //This array is istantiated to build the animations for the tanks in the main menu
+        var tankArray = [];
+        tankArray.push(tank);
+        tankArray.push(clonedTank);
+
+
+
+        //Store the first created tank and the clone tank to the scene.
+        scene.firstTank = tank;
+        scene.clonedTank = clonedTank;
+
+
+        animateTankMenu(scene, tankArray);
+
     }
 
 
@@ -258,7 +309,7 @@ var loadTankCrosshair = function (scene, tank) {
  */
 
 var startTank = function (scene, tank) {
-    if(!tank) return;
+    if (!tank) return;
     tank.move();
     tank.animateTurret(scene);
 
@@ -296,7 +347,7 @@ var startBlueTeamTanks = function (scene) {
 
         //This function will now return the distance vector.
         var distance = blueTeamTanks[i].followTank(heroTank.root);
-        
+
         /**The enemy tanks will  if (proba <= blueTeamTanks[i].probaValue) {
             have a close to random behaviour. 
          * Sample from a uniform distribution and determine whether the tank should shoot to 
@@ -305,9 +356,9 @@ var startBlueTeamTanks = function (scene) {
 
         var proba = Math.random();
         if (proba <= blueTeamTanks[i].probaValue) {
-            
-            
-            
+
+
+
             proba = Math.random();
 
 
@@ -321,12 +372,12 @@ var startBlueTeamTanks = function (scene) {
 
 
             //Shoot at the player tank if and only if the opponent tank is relatively near.
-            if(distance <= Tank.AI_SHOOTING_DISTANCE){
+            if (distance <= Tank.AI_SHOOTING_DISTANCE) {
                 if (blueTeamTanks[i].currentWeapon == Tank.CANNON)
                     blueTeamTanks[i].fireCannonBalls(scene);
                 else if (blueTeamTanks[i].currentWeapon == Tank.MACHINE_GUN)
                     blueTeamTanks[i].fireGun(scene);
-                }
+            }
         }
 
 
@@ -355,7 +406,7 @@ var registerLootBoxTriggers = function (scene) {
     if (!scene) return;
 
     //Possible bug
-    if(scene != Game.scenes[Game.activeScene]) return;
+    if (scene != Game.scenes[Game.activeScene]) return;
 
 
 
@@ -383,7 +434,7 @@ var registerLootBoxTriggers = function (scene) {
     var heroTank = scene.heroTank;
     var heroTankBody = heroTank.getBody();
 
-    if(!heroTankBody) return;
+    if (!heroTankBody) return;
 
 
 
@@ -403,7 +454,7 @@ var registerLootBoxTriggers = function (scene) {
             },
 
             function () {
-              
+
                 //Dispose the loot box and free some memory.
                 box.lootBox.dispose();
 
@@ -432,8 +483,8 @@ var registerLootBoxTriggers = function (scene) {
                             var urlTexture = 'texture/cubeTextures/hearth/health';
                             var index = theBox.index;
                             var scale = 5;
-                            texturizeLootBox(scene, theBox, urlTexture, index, scale,0.7);
-                            animateLootBoxes(scene,theBox);
+                            texturizeLootBox(scene, theBox, urlTexture, index, scale, 0.7);
+                            animateLootBoxes(scene, theBox);
 
                         }, LOOT_BOX_RESPAWN_TIME);
 
@@ -447,7 +498,7 @@ var registerLootBoxTriggers = function (scene) {
                         var theBox = box;
                         var theScene = scene;
 
-                        
+
                         //After a time that depends on LOOT_BOX_RESPAWN_TIME the loot box must respawn.
                         setTimeout(function () {
 
@@ -460,8 +511,8 @@ var registerLootBoxTriggers = function (scene) {
                             var urlTexture = 'texture/cubeTextures/machinegun/machinegun';
                             var index = theBox.index;
                             var scale = 5;
-                            texturizeLootBox(scene, theBox, urlTexture, index, scale,0.7);
-                            animateLootBoxes(scene,theBox);
+                            texturizeLootBox(scene, theBox, urlTexture, index, scale, 0.7);
+                            animateLootBoxes(scene, theBox);
 
 
 
@@ -492,7 +543,7 @@ var registerLootBoxTriggers = function (scene) {
                             var index = theBox.index;
                             var scale = 5;
                             texturizeLootBox(scene, theBox, urlTexture, index, scale, 0.7);
-                            animateLootBoxes(scene,theBox);
+                            animateLootBoxes(scene, theBox);
 
 
                         }, LOOT_BOX_RESPAWN_TIME);
@@ -520,7 +571,7 @@ var registerLootBoxTriggers = function (scene) {
                             var index = theBox.index;
                             var scale = 5;
                             texturizeLootBox(scene, theBox, urlTexture, index, scale, 0.7);
-                            animateLootBoxes(scene,theBox);
+                            animateLootBoxes(scene, theBox);
 
 
                         }, LOOT_BOX_RESPAWN_TIME);
@@ -566,33 +617,33 @@ var registerOutsideOfMapTrigger = function (scene) {
 
     var heroTank = scene.heroTank;
 
-    
 
-    
+
+
     /**
      * Register an "out of map" trigger for each tank team. 
     */
 
     //For the blue tank team.
-    if(!scene.blueTanks || !scene.redTanks) return; 
+    if (!scene.blueTanks || !scene.redTanks) return;
 
-    scene.blueTanks.forEach(function(tank){
-        
+    scene.blueTanks.forEach(function (tank) {
+
         var tankPosition = tank.root.getAbsolutePosition();
         //Move the tank back to the spawn position.
-        if(Math.abs(tankPosition.x) >= (ground._width/2) || Math.abs(tankPosition.z) >= (ground._height/2)){
+        if (Math.abs(tankPosition.x) >= (ground._width / 2) || Math.abs(tankPosition.z) >= (ground._height / 2)) {
             //Teleport the tank to the spawn point if it goes outside of the map.
             tank.teleportSpawn();
         }
 
     });
-    
+
     //For the red tank team.
-    scene.redTanks.forEach(function(tank){
-        
+    scene.redTanks.forEach(function (tank) {
+
         var tankPosition = tank.root.getAbsolutePosition();
         //Move the tank back to the spawn position.
-        if(Math.abs(tankPosition.x) >= (ground._width/2) || Math.abs(tankPosition.z) >= (ground._height/2)){
+        if (Math.abs(tankPosition.x) >= (ground._width / 2) || Math.abs(tankPosition.z) >= (ground._height / 2)) {
             //Teleport the tank to the spawn point if it goes outside of the map.
             tank.teleportSpawn();
         }
@@ -601,12 +652,68 @@ var registerOutsideOfMapTrigger = function (scene) {
 
 
 
-    
+
 }
 
 
 
-
 /**
- * This function will create animations for the main menu tanks.  
-*/
+ * This function will create animations for the main menu tanks.
+ * @param {BABYLON.Scene} scene the object representing the scene. 
+ * @param {Array} tanks an array of objects of the Tank class. 
+ */
+var animateTankMenu = function (scene, tanks) {
+    if (!scene) return;
+
+    if (!tanks) return;
+
+
+
+    //Register a separate animation for each tank object.
+    for (var i = 0; i < tanks.length; ++i) {
+        if (tanks[i]) {
+            if (i == 0) {
+                var tankAnimation = new BABYLON.Animation("rotationMenuAnimation".concat(i.toString()), "rotationQuaternion", 15,
+                    BABYLON.Animation.ANIMATIONTYPE_QUATERNION, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+                var keyFrameAnimations = [];
+                keyFrameAnimations.push({ 'frame': 0, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), 0) });
+                keyFrameAnimations.push({ 'frame': 50, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), Math.PI / 2) });
+                keyFrameAnimations.push({ 'frame': 100, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), Math.PI) });
+                keyFrameAnimations.push({ 'frame': 150, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), Math.PI / 2) });
+                keyFrameAnimations.push({ 'frame': 200, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), 0) });
+
+                tankAnimation.setKeys(keyFrameAnimations);
+
+                var tankTurret = tanks[i].getTurret();
+
+
+                tankTurret.animations = [];
+                tankTurret.animations.push(tankAnimation);
+                scene.beginAnimation(tankTurret, 0, 200, true);
+            }
+            else if (i == 1) {
+                var rotationAnimation = new BABYLON.Animation("rootRotationMenuAnimation".concat(i.toString()), "rotationQuaternion", 20,
+                    BABYLON.Animation.ANIMATIONTYPE_QUATERNION, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+                var keyFrameAnimationsRotation = [];
+                keyFrameAnimationsRotation.push({ 'frame': 0, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), -Math.PI /4) });
+                keyFrameAnimationsRotation.push({ 'frame': 50, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), -Math.PI /2) });
+                keyFrameAnimationsRotation.push({ 'frame': 100, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), -3/4*Math.PI) });
+                keyFrameAnimationsRotation.push({ 'frame': 150, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), -Math.PI / 2) });
+                keyFrameAnimationsRotation.push({ 'frame': 200, 'value': new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), -Math.PI /4) });
+
+                rotationAnimation.setKeys(keyFrameAnimationsRotation);
+
+                var root = tanks[i].root;
+
+
+                root.animations = [];
+                root.animations.push(rotationAnimation);
+                scene.beginAnimation(root, 0, 200, true);
+
+            }
+        }
+    }
+
+}

@@ -8,7 +8,11 @@
  * 
  */
 
+function playGameMusicCallback(){
 
+    if(soundEnabled)
+        scene.assets['gameMusic'].play();
+}
 
 
 /**
@@ -44,6 +48,7 @@ var configureAssetsManager = function (scene) {
         */
        
         if(Game.activeScene == FIRST_LEVEL_SCENE_VALUE){
+
             engine.runRenderLoop(function () {
                 scene.toRender();           
             });
@@ -54,7 +59,7 @@ var configureAssetsManager = function (scene) {
             });
         }
 
-        else if(Game.activeScene == DEATH_MENU_SCENE_VALUE){
+        else if(Game.activeScene == END_MENU_SCENE_VALUE){
             engine.runRenderLoop(function(){
                 scene.render();
             });
@@ -88,7 +93,7 @@ var loadSounds = function (scene) {
     //To repeat the sound whenever it finishes.
     binaryTask.onSuccess = function (task) {
         scene.assets["laserSound"] = new BABYLON.Sound("laser", task.data, scene, null,
-            { loop: false });
+            { loop: true });
 
 
 
@@ -140,6 +145,19 @@ var loadSounds = function (scene) {
 
     }
 
+
+    //Load the sound of the explosion.
+    binaryTask = scene.assetsManager.addBinaryFileTask("gameMusic", "sounds/game-music.wav");
+
+
+    //To repeat the sound whenever it finishes.
+    binaryTask.onSuccess = function (task) {
+        scene.assets["gameMusic"] = new BABYLON.Sound("gameMusic", task.data, scene, playGameMusicCallback,
+            { loop: true,
+            volume: 0.18 });
+
+    }
+
 }
 
 
@@ -169,11 +187,15 @@ var createGround = function (scene, groundOptions, urlGroundTexture = null, enab
 
 
 
+
     //TODO; Define an onload callback function if the texture loading is too slow.
     if (urlGroundTexture != null)
         groundMaterial.diffuseTexture = new BABYLON.Texture(urlGroundTexture, scene);
     groundMaterial.diffuseTexture.uScale = 3;
     groundMaterial.diffuseTexture.vScale = 3;
+
+
+    groundMaterial.specularColor = new BABYLON.Color3.Black;
 
 
 
@@ -240,9 +262,80 @@ var createLights = function (scene, lightsArray) {
 
             }
 
+            if(lightsArray[i].type == 'pointlight'){
+                if (lightsArray[i].position) {
+                    var position = lightsArray[i].position;
+                }
+
+                //If the position is nt provided, then we provide a default position.
+                else {
+                    var position = new BABYLON.Vector3(-1, -1, 0);
+                }
+
+
+                //Create the directional light.
+                var light = new BABYLON.PointLight(lightsArray[i].name, position, scene);
+
+                //Check if a diffuse color is provided for the light.
+                if (lightsArray[i].diffuseColor) {
+                    var diffuseColor = lightsArray[i].diffuseColor;
+                }
+
+                //If no diffuse color is provided, we set white as diffuse color of the light.
+                else {
+                    var diffuseColor = new BABYLON.Color3.White;
+                }
+
+                light.diffuse = diffuseColor;
+                scene.lights.push(light);
+
+            }
+
+
+            if(lightsArray[i].type == 'spotlight'){
+                if (lightsArray[i].position) {
+                    var position = lightsArray[i].position;
+                }
+
+                //If the position is nt provided, then we provide a default position.
+                else {
+                    var position = new BABYLON.Vector3(-1, -1, 0);
+                }
+
+
+                if(lightsArray[i].direction){
+                    var direction = lightsArray[i].direction;
+                }
+                else{
+                    var direction = new BABYLON.Vector3(1,1,0);
+                }
+
+                //Create the directional light.
+                var light = new BABYLON.SpotLight(lightsArray[i].name, position, direction,Math.PI/4,0.4,scene);
+
+                //Check if a diffuse color is provided for the light.
+                if (lightsArray[i].diffuseColor) {
+                    var diffuseColor = lightsArray[i].diffuseColor;
+                }
+
+                //If no diffuse color is provided, we set white as diffuse color of the light.
+                else {
+                    var diffuseColor = new BABYLON.Color3.White;
+                }
+
+                light.diffuse = diffuseColor;
+                scene.lights.push(light);
+
+            }
+
 
         }
     }
+
+
+    var l = new BABYLON.PointLight("o", new BABYLON.Vector3(200,1,-6),scene);
+    l.diffuseColor = new BABYLON.Color3.Green;
+  
 
 
     return;
@@ -349,8 +442,14 @@ var createFollowCamera = function (scene, target, followCameraProperties, name =
 
 
     //To constraint the movement of the camera. It must not be able to freely move into the scene.
-    followCamera.upperHeightOffsetLimit = followCameraProperties.heightOffset -5.0;
-    followCamera.lowerHeightOffsetLimit = followCameraProperties.heightOffset -12.0;
+    followCamera.upperHeightOffsetLimit = followCameraProperties.heightOffset -4.0;
+    followCamera.lowerHeightOffsetLimit = followCameraProperties.heightOffset -13.0;
+
+
+    followCamera.upperLimitRadius = followCameraProperties.radius + 10;
+    followCamera.lowerLimitRadius = followCameraProperties.radius -10;
+
+
     followCamera.noRotationConstraint = false;
     
 
@@ -882,10 +981,28 @@ var createSceneObjects = function(scene){
         return; 
 
     
-    var mySphere = BABYLON.MeshBuilder.CreateSphere("scenarioScene", {diameter: 200}, scene);
+    var sceneSphere = BABYLON.MeshBuilder.CreateSphere("scenarioScene", {diameter: 200}, scene);
     var spherePosition = new BABYLON.Vector3(0,200,0);
-    mySphere.position = spherePosition;
+    sceneSphere.position = spherePosition;
 
+
+    var sphereMaterial  = new BABYLON.StandardMaterial("sphereMaterial",scene);
+   
+    sceneSphere.material = sphereMaterial;
+
+    sphereMaterial.specularColor = new BABYLON.Color3.Black;
+
+    scene.lights[1].parent = sceneSphere;
+
+
+    
+
+    scene.theSphere = sceneSphere;
+    
+    
+
+
+   
     return;
 
 
