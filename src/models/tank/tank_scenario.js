@@ -366,7 +366,7 @@ var startBlueTeamTanks = function (scene) {
         var proba = Math.random();
         if (proba <= blueTeamTanks[i].probaValue) {
 
-
+            blueTeamTanks[i].animateWheels(-0.01);
 
             proba = Math.random();
 
